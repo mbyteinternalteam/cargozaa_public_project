@@ -48,6 +48,9 @@ class SignupForm extends Component
     #[Validate('required|string|max:500')]
     public string $registeredAddress = '';
 
+    #[Validate('required|string|max:50')]
+    public string $registeredCity = '';
+
     #[Validate('required|string|max:10')]
     public string $registeredPostcode = '';
 
@@ -83,9 +86,15 @@ class SignupForm extends Component
         $this->resetErrorBag('ssmCertificate');
     }
 
+    public function closeSuccessModal()
+    {
+        $this->reset();
+        return redirect()->route('owner.login');
+    }
+
     public function submit(): void
     {
-        dd($this->all());
+        // dd($this->all());
         $this->validate();
 
         DB::transaction(function (): void {
@@ -104,6 +113,7 @@ class SignupForm extends Component
                 'ssm_number' => $this->taxId,
                 'phone' => $this->phone,
                 'registered_address' => $this->registeredAddress,
+                'registered_city' => $this->registeredCity,
                 'registered_postcode' => $this->registeredPostcode,
                 'registered_state' => optional(State::query()->find($this->registeredStateId))->name,
                 'tax_id' => $this->taxId,
@@ -121,7 +131,7 @@ class SignupForm extends Component
 
             KycAccount::query()->create([
                 'owner_id' => $owner->id,
-                'kyc_status' => KYCStatus::UnderReview,
+                'kyc_status' => KYCStatus::Pending,
                 'kyc_submitted_at' => now(),
             ]);
         });

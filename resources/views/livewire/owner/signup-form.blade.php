@@ -9,7 +9,7 @@
         </div>
 
         <div class="bg-white dark:bg-card rounded-2xl shadow-xl p-8">
-            <form wire:submit.prevent="submit" class="space-y-6" enctype="multipart/form-data">
+            <form wire:submit="submit" class="space-y-6" enctype="multipart/form-data">
                 <div>
                     <h3 class="text-lg font-semibold mb-4 text-primary">Personal Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,9 +64,9 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Owner IC Number</label>
-                            <input wire:model.defer="ownerIcNumber" type="text"
-                                   class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
-                                   placeholder="870101-14-1234">
+                            <input wire:model.defer="ownerIcNumber" type="number"
+                                   class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
+                                   placeholder="870101141234">
                             @error('ownerIcNumber')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
 
@@ -82,7 +82,7 @@
                             </select>
                             @error('ownerIcType')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
-                        <div class="md:col-span-2">
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 ">Registered Address</label>
                             <input wire:model.defer="registeredAddress" type="text"
                                    class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
@@ -90,9 +90,16 @@
                             @error('registeredAddress')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Registered Postcode</label>
-                            <input wire:model.defer="registeredPostcode" type="text"
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 ">Registered City</label>
+                            <input wire:model.defer="registeredCity" type="text"
                                    class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
+                                   placeholder="Klang Lama">
+                            @error('registeredCity')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Registered Postcode</label>
+                            <input wire:model.defer="registeredPostcode" type="number" 
+                                   class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
                                    placeholder="50000">
                             @error('registeredPostcode')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                         </div>
@@ -206,7 +213,7 @@
                         </span>
                     </label>
                     <label class="flex items-start gap-2 cursor-pointer">
-                        <input type="checkbox" wire:model="acceptTerms"
+                        <input type="checkbox" wire:model.live="acceptTerms"
                                class="mt-1 rounded border-gray-300 text-primary focus:ring-primary">
                         <span class="text-sm text-gray-700 dark:text-gray-300">
                             I agree to the
@@ -223,6 +230,7 @@
                 <button
                     type="submit"
                     class="btn w-full py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl border-0 text-white transition-all bg-gradient-to-r from-secondary to-amber-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                    @disabled(! $businessVerified || ! $acceptTerms)
                     wire:loading.attr="disabled"
                     wire:target="submit,ssmCertificate"
                 >
@@ -245,7 +253,7 @@
     </div>
 
     @if ($showSuccessModal)
-        <div class="modal modal-open">
+        <div class="modal modal-open">  
             <div class="modal-box">
                 <h3 class="font-bold text-lg text-primary">Account created successfully</h3>
                 <p class="py-4 text-sm text-gray-700">
@@ -253,7 +261,7 @@
                     It will take approximately 24 to 48 hours to approve your account before you can start listing containers for lease.
                 </p>
                 <div class="modal-action">
-                    <button type="button" class="btn" wire:click="$set('showSuccessModal', false)">
+                    <button type="button" class="btn" wire:click="closeSuccessModal">
                         Close
                     </button>
                 </div>
