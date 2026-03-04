@@ -6,9 +6,11 @@
     <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-blue-50 to-white">
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-                     style="background-color: #FFD700;">
-                    <span class="text-2xl font-bold" style="color: #000080;">CZ</span>
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 bg-primary">
+                    <!-- <span class="text-2xl font-bold" style="color: #000080;">CZ</span> -->
+                    <x-heroicon-s-home class="w-8 h-8 text-white" />
+
+
                 </div>
                 <h1 class="text-3xl font-bold mb-2" style="color: #000080;">
                     Owner Portal
@@ -24,51 +26,43 @@
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                             Email Address
                         </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-400 text-sm">@</span>
-                            </div>
+                       
                             <input
                                 id="email"
                                 name="email"
                                 type="email"
                                 value="{{ old('email') }}"
-                                class="input input-bordered w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                                class="input input-bordered w-full pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                                 placeholder="you@company.com"
+                                style="font-size: 14px;"
                                 required
                             />
-                        </div>
                     </div>
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                             Password
                         </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-400 text-sm">••</span>
-                            </div>
+
                             <input
                                 id="password"
                                 name="password"
                                 type="password"
-                                class="input input-bordered w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                                class="input input-bordered w-full  pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                                 placeholder="Enter your password"
+                                style="font-size: 14px;"
                                 required
                             />
-                        </div>
+                      
                     </div>
 
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                            <input
-                                id="remember-me"
-                                name="remember"
-                                type="checkbox"
-                                class="checkbox checkbox-warning h-4 w-4"
-                            />
-                            <span>Remember me</span>
+                             <input type="checkbox" checked="checked" class="checkbox bg-gray-100 " />
+                        <span>Remember me</span>
                         </label>
+                       
+
 
                         <a
                             href="/forgot-password"
@@ -81,8 +75,8 @@
 
                     <button
                         type="submit"
-                        class="btn w-full py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl border-0 text-white transition-all"
-                        style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);"
+                        class="btn w-full py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl border-0 text-white transition-all bg-primary"
+                        
                     >
                         Sign In to Owner Portal
                     </button>
