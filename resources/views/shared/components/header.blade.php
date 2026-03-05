@@ -1,5 +1,34 @@
 @php
+    use App\Enums\UserType;
+
     $isHome = request()->is('/');
+    $user = auth()->user();
+
+    if (! $user) {
+        // Guest
+        $navLinks = [
+            ['href' => '/', 'label' => 'Home'],
+        ];
+    } elseif ($user->user_type === UserType::CUSTOMER) {
+        // Customer
+        $navLinks = [
+            ['href' => '/', 'label' => 'Home'],
+            ['href' => '/search', 'label' => 'Explore'],
+            ['href' => '/customer/leases', 'label' => 'Leases'],
+        ];
+    } elseif ($user->user_type === UserType::OWNER) {
+        // Owner
+        $navLinks = [
+            ['href' => route('owner.dashboard'), 'label' => 'Dashboard'],
+            ['href' => '/owner/containers', 'label' => 'My Container'],
+            ['href' => '/owner/orders', 'label' => 'Orders'],
+            ['href' => '/owner/finance', 'label' => 'My Finance'],
+        ];
+    } else {
+        $navLinks = [
+            ['href' => '/', 'label' => 'Home'],
+        ];
+    }
 @endphp
 
 <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 {{ $isHome ? 'bg-white/95 backdrop-blur-md' : 'bg-white shadow-sm' }}">
@@ -15,17 +44,13 @@
             </a>
 
             <div class="hidden lg:flex items-center gap-8">
-                @php
-                    $links = [
-                        ['href' => '/search', 'label' => 'Browse Containers'],
-                        ['href' => '/owner', 'label' => 'List Your Container'],
-                        ['href' => '/orders', 'label' => 'My Orders'],
-                        ['href' => '/tracking', 'label' => 'GPS Tracking'],
-                    ];
-                @endphp
-                @foreach ($links as $link)
-                    @php $active = request()->is(ltrim($link['href'], '/').'*'); @endphp
-                    <a href="{{ url($link['href']) }}"
+                @foreach ($navLinks as $link)
+                    @php
+                        $href = $link['href'];
+                        $url = str_starts_with($href, 'http') ? $href : url($href);
+                        $active = request()->fullUrlIs($url) || request()->is(ltrim(parse_url($href, PHP_URL_PATH) ?? '', '/').'*');
+                    @endphp
+                    <a href="{{ $url }}"
                        class="text-[14px] transition-colors relative py-1 {{ $active ? 'text-[#000080] font-semibold' : 'text-gray-600 hover:text-[#000080]' }}">
                         {{ $link['label'] }}
                         @if($active)
@@ -38,7 +63,7 @@
             <div class="hidden lg:flex items-center gap-3">
                 <a href="{{ url('/search') }}"
                    class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
-                    <x-heroicon-s-magnifying-glass class="w-[18px] h-[18px] text-gray-600" />
+                    <x-heroicon-s-bell class="w-[18px] h-[18px] text-primary" />
                 </a>
 
                 <div class="dropdown dropdown-end">
@@ -56,7 +81,7 @@
                             <li><a href="{{ route('owner.signup') }}" class="font-semibold text-[#000080]"><x-heroicon-s-user-plus class="w-4 h-4" /> Sign Up</a></li>
                         @else
                             <li><a href="{{ route('owner.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
-                            <li><a href="{{ route('logout') }}" class="text-red-500"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 " /> Log Out</a></li>
+                            <li><a href="{{ route('logout') }}" class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</a></li>
                         @endguest
                     </ul>
                 </div>

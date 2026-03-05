@@ -14,28 +14,16 @@ Route::get('/', function (): View {
 
 Route::get('/login', fn () => redirect()->route('owner.login'))->name('login');
 
-Route::get('/owner/login', [OwnerLoginController::class, 'show'])
-    ->name('owner.login');
-
-Route::post('/owner/login', [OwnerLoginController::class, 'login'])
-    ->name('owner.login.attempt');
-
-Route::get('/logout', function () {
+Route::post('/logout', function (Request $request) {
     Auth::logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
     return redirect()->route('owner.login');
 })->middleware('auth')->name('logout');
 
-Route::get('/owner/signup', [OwnerAuthController::class, 'create'])
-    ->name('owner.signup');
 
-Route::post('/owner/signup', [OwnerAuthController::class, 'store'])
-    ->name('owner.signup.store');
+require __DIR__.'/owner.php';
 
-Route::get('/owner/profile', OwnerProfileController::class)
-    ->middleware('auth')
-    ->name('owner.profile');
-
-Route::get('/owner/dashboard', function (): View {
-    return view('owner.dashboard');
-})->middleware('auth')->name('owner.dashboard');
+require __DIR__.'/customer.php';
