@@ -21,7 +21,8 @@
             </div>
 
             <div class="bg-white rounded-2xl shadow-xl p-8">
-                <form class="space-y-6" action="{{ route('owner.login') }}" method="GET">
+                <form class="space-y-6" action="{{ route('owner.login.attempt') }}" method="POST">
+                    @csrf
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                             Email Address
@@ -32,11 +33,14 @@
                                 name="email"
                                 type="email"
                                 value="{{ old('email') }}"
-                                class="input input-bordered w-full pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                                class="input input-bordered w-full pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all @error('email') border-red-500 focus:ring-red-400 @enderror"
                                 placeholder="you@company.com"
                                 style="font-size: 14px;"
                                 required
                             />
+                            @error('email')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                     </div>
 
                     <div>
@@ -48,17 +52,20 @@
                                 id="password"
                                 name="password"
                                 type="password"
-                                class="input input-bordered w-full  pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                                class="input input-bordered w-full  pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all @error('password') border-red-500 focus:ring-red-400 @enderror"
                                 placeholder="Enter your password"
                                 style="font-size: 14px;"
                                 required
                             />
+                            @error('password')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                       
                     </div>
 
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-                             <input type="checkbox" checked="checked" class="checkbox bg-gray-100 " />
+                             <input type="checkbox" name="remember" class="checkbox bg-gray-100 " />
                         <span>Remember me</span>
                         </label>
                        
@@ -145,5 +152,34 @@
             </div>
         </div>
     </div>
-@endsection
 
+    @if (session('owner_login_blocked'))
+        @php($block = session('owner_login_blocked'))
+        <div class="modal modal-open">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg text-primary">
+                    {{ $block['title'] ?? 'Unable to sign in' }}
+                </h3>
+                <p class="py-3 text-sm text-gray-700">
+                    {{ $block['message'] ?? '' }}
+                </p>
+
+                @if (!empty($block['reason']))
+                    <p class="mt-2 text-sm font-semibold text-gray-800">
+                        Reason: <span class="font-normal">{{ $block['reason'] }}</span>
+                    </p>
+                @endif
+
+                @if (!empty($block['details']))
+                    <p class="mt-1 text-sm text-gray-600">
+                        {{ $block['details'] }}
+                    </p>
+                @endif
+
+                <div class="modal-action">
+                    <a href="{{ url()->current() }}" class="btn">Close</a>
+                </div>
+            </div>
+        </div>
+    @endif
+@endsection

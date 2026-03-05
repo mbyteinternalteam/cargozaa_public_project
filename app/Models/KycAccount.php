@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\KYCAction;
 use App\Enums\KYCStatus;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +10,7 @@ class KycAccount extends Model
 {
     protected $fillable = [
         'owner_id',
+        'action',
         'kyc_status',
         'kyc_submitted_at',
         'kyc_reviewed_at',
@@ -21,6 +23,7 @@ class KycAccount extends Model
     protected function casts(): array
     {
         return [
+            'action' => KYCAction::class,
             'kyc_status' => KYCStatus::class,
             'kyc_submitted_at' => 'datetime',
             'kyc_reviewed_at' => 'datetime',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\KYCAction;
 use App\Enums\KYCStatus;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
@@ -58,7 +59,8 @@ class OwnerAuthController extends Controller
 
             KycAccount::query()->create([
                 'owner_id' => $owner->id,
-                'kyc_status' => KYCStatus::UnderReview,
+                'kyc_action' => KYCAction::Create,
+                'kyc_status' => KYCStatus::Pending,
                 'kyc_submitted_at' => now(),
             ]);
         });

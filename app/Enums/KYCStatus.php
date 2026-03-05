@@ -36,4 +36,15 @@ enum KYCStatus: string
     {
         return collect(self::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()])->toArray();
     }
+
+    public function message(): string
+    {
+        return match ($this) {
+            self::Pending => 'Your KYC is pending.',
+            self::UnderReview => 'Your KYC is under review.',
+            self::Approved => 'Your KYC is approved.',
+            self::Rejected => 'Your KYC is rejected.',
+            self::Suspended => 'Your KYC is suspended.',
+        };
+    }
 }

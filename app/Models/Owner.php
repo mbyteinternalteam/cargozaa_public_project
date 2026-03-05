@@ -12,12 +12,12 @@ class Owner extends Model
 
     protected $fillable = [
         'user_id',
+        'profile_picture',
         'business_name',
         'business_type',
         'ssm_number',
         'ssm_document',
         'phone',
-        'service_states',
         'website',
         'registered_address',
         'registered_city',

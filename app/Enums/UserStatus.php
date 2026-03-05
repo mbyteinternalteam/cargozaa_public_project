@@ -26,4 +26,15 @@ enum UserStatus: string
     {
         return collect(self::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()])->toArray();
     }
+
+    public function message(): string
+    {
+        return match ($this) {
+            self::Active => 'Your account is active.',
+            self::Inactive => 'Your account is inactive.',
+            self::Pending => 'Your account is pending.',
+            self::Suspended => 'Your account is permanently suspended.',
+            self::TemporarySuspended => 'Your account is temporarily suspended. Please contact support.',
+        };
+    }
 }

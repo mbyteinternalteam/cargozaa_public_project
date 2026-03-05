@@ -28,6 +28,7 @@ class User extends Authenticatable
         'status',
         'email_verified_at',
         'user_type',
+        'first_time',
     ];
 
     /**
