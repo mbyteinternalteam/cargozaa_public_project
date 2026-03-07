@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
+
+require __DIR__.'/owner.php';
+
+require __DIR__.'/customer.php';
+
 Route::get('/', function (): View {
     return view('welcome');
 });
@@ -24,6 +29,6 @@ Route::post('/logout', function (Request $request) {
 })->middleware('auth')->name('logout');
 
 
-require __DIR__.'/owner.php';
+Route::post('/owner/signup', [OwnerAuthController::class, 'store'])
+    ->name('owner.signup.store');
 
-require __DIR__.'/customer.php';

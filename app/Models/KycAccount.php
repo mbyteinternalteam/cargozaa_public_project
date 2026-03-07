@@ -10,7 +10,7 @@ class KycAccount extends Model
 {
     protected $fillable = [
         'owner_id',
-        'action',
+        'kyc_action',
         'kyc_status',
         'kyc_submitted_at',
         'kyc_reviewed_at',

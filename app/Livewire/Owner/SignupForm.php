@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Enums\KYCAction;
 
 class SignupForm extends Component
 {
@@ -133,6 +134,7 @@ class SignupForm extends Component
                 'owner_id' => $owner->id,
                 'kyc_status' => KYCStatus::Pending,
                 'kyc_submitted_at' => now(),
+                'kyc_action' => KYCAction::Create,
             ]);
         });
 
