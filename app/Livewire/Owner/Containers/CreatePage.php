@@ -175,7 +175,6 @@ class CreatePage extends Component
 
         $container = Container::query()->create([
             'owner_id' => $owner->id,
-            // 'display_id' => 'CNT-'.str_pad((string) (Container::max('id') + 1), 5, '0', STR_PAD_LEFT),
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'container_type' => $validated['container_type'],
@@ -206,8 +205,14 @@ class CreatePage extends Component
 
         $storedImages = [];
 
+        $userId = Auth::user()?->id;
+
+        if ($userId === null) {
+            abort(403);
+        }
+
         foreach ($this->images as $image) {
-            $storedImages[] = $image->store("owner_documents/{$owner->id}/containers/{$container->id}", 'public');
+            $storedImages[] = $image->store("owner_documents/{$userId}/containers/{$container->id}", 'public');
         }
 
         $container->images = $storedImages;

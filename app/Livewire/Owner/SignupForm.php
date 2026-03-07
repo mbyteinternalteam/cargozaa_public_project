@@ -3,6 +3,7 @@
 namespace App\Livewire\Owner;
 
 use App\Enums\BusinessType;
+use App\Enums\KYCAction;
 use App\Enums\KYCStatus;
 use App\Enums\UserStatus;
 use App\Enums\UserType;
@@ -133,6 +134,7 @@ class SignupForm extends Component
                 'owner_id' => $owner->id,
                 'kyc_status' => KYCStatus::Pending,
                 'kyc_submitted_at' => now(),
+                'kyc_action' => KYCAction::Create,
             ]);
         });
 
