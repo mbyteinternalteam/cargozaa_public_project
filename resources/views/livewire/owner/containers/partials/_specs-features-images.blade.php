@@ -75,11 +75,28 @@
                             $name = (string) $feature->name;
                         @endphp
 
-                        <label
-                            class="flex items-center gap-3 p-4 rounded-xl border border-gray-200  hover:bg-gray-50 transition-colors cursor-pointer">
+                        
+
+                        <label wire:target="{{ $name }}" wire:key="{{ $name }}"
+                            class="flex items-center gap-3 p-4 rounded-xl border-2 transition-colors cursor-pointer
+                                   @if(in_array($name, old(request('features', [])))
+                                       'border-blue-500'
+                                   @else
+                                       'border-gray-200 hover:bg-gray-50'
+                                   @endif">
                             <input type="checkbox" wire:model="features" value="{{ $name }}"
-                                   class="checkbox checkbox-sm bg-gray-100" />
-                            <span class="text-[14px] text-gray-700 font-medium">{{ $name }}</span>
+                                   class="checkbox checkbox-sm
+                                   @if(in_array($name, old(request('features', [])))
+                                       'bg-blue-800 border-blue-800 checked:bg-[#000080] checked:text-white'
+                                   @else
+                                       'bg-gray-100'
+                                   @endif" />
+                            <span class="text-[14px] font-medium
+                                   @if(in_array($name, old(request('features', [])))
+                                       'text-white'
+                                   @else
+                                       'text-gray-700'
+                                   @endif">{{ $name }}</span>
                         </label>
                     @endforeach
                 </div>

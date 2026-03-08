@@ -29,18 +29,18 @@ Route::prefix('owner')->name('owner.')->group(function (): void {
 
         Route::get('dashboard', function (): View {
             return view('owner.dashboard');
-        })->name('dashboard');
+        })->middleware('owner.active')->name('dashboard');
 
         Route::get('containers', IndexPage::class)
-            ->name('containers.index');
+            ->middleware('owner.active')->name('containers.index');
 
         Route::get('containers/create', CreatePage::class)
-            ->name('containers.create');
+            ->middleware('owner.active')->name('containers.create');
 
         Route::get('containers/{container}/edit', EditPage::class)
-            ->name('containers.edit');
+            ->middleware('owner.active')->name('containers.edit');
 
         Route::get('containers/{container}', ShowPage::class)
-            ->name('containers.show');
+            ->middleware('owner.active')->name('containers.show');
     });
 });

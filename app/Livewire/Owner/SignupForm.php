@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Enums\KYCAction;
 
 class SignupForm extends Component
 {
@@ -144,7 +143,7 @@ class SignupForm extends Component
 
     public function render()
     {
-        return view('livewire.owner.signup-form');
+        return view('livewire.owner.auth.signup-form');
     }
 }
 

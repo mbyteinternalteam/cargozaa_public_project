@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 mt-16">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
     <!-- Header -->
     <div class="">
         <div class="max-w-7xl mx-auto px-6 py-6">
