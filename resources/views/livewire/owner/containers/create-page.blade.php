@@ -48,6 +48,32 @@
             </div>
         </form>
     </div>
+
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert-modal" class="fixed inset-0 z-[9999] hidden bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md mx-4 w-full relative z-[10000]">
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0">
+                        <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-lg font-semibold text-gray-900">Invalid Location</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <p id="custom-alert-message" class="text-sm text-gray-600 leading-relaxed"></p>
+                </div>
+                <div class="flex justify-end">
+                    <button id="custom-alert-close" class="px-4 py-2 bg-[#000080] text-white text-sm font-medium rounded-lg hover:bg-[#000060] transition-colors">
+                        OK, I Understand
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @once
@@ -69,7 +95,19 @@
             const componentEl = mapEl.closest('[wire\\:id]');
             const component = () => window.Livewire.find(componentEl.getAttribute('wire:id'));
 
-            const map = L.map(mapEl).setView([3.1390, 101.6869], 10);
+            // Malaysia bounds (approximately)
+            const malaysiaBounds = [
+                [0.8553, 99.9042], // Southwest corner (near Singapore border)
+                [7.3667, 119.2702]  // Northeast corner (near Borneo)
+            ];
+
+            const map = L.map(mapEl, {
+                maxBounds: malaysiaBounds,
+                maxBoundsViscosity: 1.0,
+                minZoom: 6,
+                maxZoom: 18
+            }).setView([4.2105, 101.9758], 8);
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors',
@@ -93,7 +131,36 @@
                 const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}`;
                 const res = await fetch(url, {headers: {'Accept': 'application/json'}});
                 if (!res.ok) return null;
-                return await res.json();
+                const data = await res.json();
+
+                // Debug logging to see what's actually returned
+                console.log('Reverse geocoding data:', data);
+                console.log('Address:', data?.address);
+
+                // Validate if location is in Malaysia or Singapore
+                if (!data || !data.address) return null;
+
+                const addr = data.address;
+                const countryCode = addr.country_code || '';
+                const countryName = addr.country || '';
+
+                // Check for Malaysia variations
+                const isMalaysia = countryCode.toLowerCase() === 'my' ||
+                                  countryName.toLowerCase().includes('malaysia') ||
+                                  countryCode.toLowerCase() === 'MY';
+
+                // Check for Singapore variations
+                const isSingapore = countryCode.toLowerCase() === 'sg' ||
+                                   countryName.toLowerCase().includes('singapore') ||
+                                   countryCode.toLowerCase() === 'SG';
+
+                // Only allow Malaysia and Singapore
+                if (!isMalaysia && !isSingapore) {
+                    showCustomAlert(`Location must be in Malaysia or Singapore. The selected location is in ${countryName || 'an unsupported country'}). Please choose a location within Malaysia or Singapore.`);
+                    return null;
+                }
+
+                return data;
             };
 
             const setPin = async (lat, lng) => {
@@ -114,8 +181,13 @@
                 lw.set('longitude', +lng);
 
                 const data = await reverseGeocode(lat, lng);
-                if (!data) return;
+                if (!data) {
+                    // Reverse geocoding already showed validation alert
+                    // Don't populate address fields for invalid locations
+                    return;
+                }
 
+                // Only populate address fields for valid Malaysia/Singapore locations
                 const displayName = data.display_name || '';
                 lw.set('full_address', displayName);
                 lw.set('location', buildShortLocation(data.address, displayName));
@@ -151,6 +223,41 @@
 
         document.addEventListener('livewire:init', initContainerCreateMap);
         document.addEventListener('livewire:navigated', initContainerCreateMap);
+
+        // Custom Alert Function
+        function showCustomAlert(message) {
+            const modal = document.getElementById('custom-alert-modal');
+            const messageEl = document.getElementById('custom-alert-message');
+            const closeBtn = document.getElementById('custom-alert-close');
+
+            if (!modal || !messageEl || !closeBtn) return;
+
+            messageEl.textContent = message;
+            modal.classList.remove('hidden');
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                messageEl.textContent = '';
+            };
+
+            closeBtn.onclick = closeModal;
+
+            // Close on background click
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            };
+
+            // Close on Escape key
+            const handleEscape = (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    document.removeEventListener('keydown', handleEscape);
+                }
+            };
+            document.addEventListener('keydown', handleEscape);
+        }
         </script>
     @endpush
 @endonce

@@ -84,8 +84,23 @@
                         <label class="text-[13px] text-gray-600 mb-2 block font-semibold">
                             Last Inspection Date <span class="text-red-500">*</span>
                         </label>
-                        <input type="date" wire:model="last_inspection_date"
-                               class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
+                        <div class="relative">
+                            <input type="date" 
+                                   wire:model="last_inspection_date" 
+                                   class="input input-bordered w-full py-3 px-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                   color-scheme="dark"
+                                   style="color-scheme: dark;">
+                        </div>
+                        
+                        <style>
+                            input[type="date"]::-webkit-calendar-picker-indicator {
+                                filter: invert(1);
+                            }
+                            input[type="date"]::-webkit-inner-spin-button,
+                            input[type="date"]::-webkit-outer-spin-button {
+                                filter: invert(1);
+                            }
+                        </style>
                         @error('last_inspection_date')
                             <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                         @enderror
