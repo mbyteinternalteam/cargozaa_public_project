@@ -6,9 +6,11 @@
     <title>@yield('title', config('app.name'))</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    @stack('styles')
 </head>
 <body class="font-sans antialiased bg-background text-foreground">
 @yield('body')
+@stack('scripts')
 @livewireScripts
 </body>
 </html>

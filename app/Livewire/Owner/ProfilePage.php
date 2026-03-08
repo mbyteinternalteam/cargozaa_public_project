@@ -56,6 +56,9 @@ class ProfilePage extends Component
     public ?string $website = null;
 
     /** @var \Illuminate\Http\UploadedFile|null */
+    public $profilePicture = null;
+
+    /** @var \Illuminate\Http\UploadedFile|null */
     public $ssmCertificate = null;
 
     /** @var \Illuminate\Http\UploadedFile|null */
@@ -138,6 +141,18 @@ class ProfilePage extends Component
         return BusinessType::options();
     }
 
+    public function updatedProfilePicture(): void
+    {
+        $this->validate(['profilePicture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048']);
+        $user = Auth::user();
+        $owner = $user?->owner;
+        if ($owner && $this->profilePicture) {
+            $path = $this->profilePicture->store("owner_documents/{$user->id}/profile", 'public');
+            $owner->update(['profile_picture' => $path]);
+            $this->reset('profilePicture');
+        }
+    }
+
     public function edit(): void
     {
         $this->isEditing = true;
@@ -148,7 +163,7 @@ class ProfilePage extends Component
     {
         $this->isEditing = false;
         $this->fillFromOwner(Auth::user()->owner);
-        $this->reset('ssmCertificate', 'identityDocument', 'bankStatement');
+        $this->reset('profilePicture', 'ssmCertificate', 'identityDocument', 'bankStatement');
         $this->resetValidation();
     }
 
@@ -191,6 +206,7 @@ class ProfilePage extends Component
                 'registeredPostcode' => 'required|string|max:10',
                 'registeredStateId' => 'required|integer|exists:states,id',
                 'website' => 'nullable|url|max:255',
+                'profilePicture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'ssmCertificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
                 'ownerIcNumber' => 'required|string|max:50',
                 'ownerIcType' => 'required|string|in:nric,passport',
@@ -223,6 +239,11 @@ class ProfilePage extends Component
             ]);
         }
 
+        if ($this->profilePicture && ! $this->isFirstTime) {
+            $path = $this->profilePicture->store("owner_documents/{$user->id}/profile", 'public');
+            $owner->update(['profile_picture' => $path]);
+        }
+
         if ($this->ssmCertificate && ! $this->isFirstTime) {
             $path = $this->ssmCertificate->store("owner_documents/{$user->id}/ssm", 'public');
             $owner->update(['ssm_document' => $path]);
@@ -247,14 +268,14 @@ class ProfilePage extends Component
             $user->forceFill(['first_time' => 1])->save();
             $this->isFirstTime = false;
 
-            $this->reset('ssmCertificate', 'identityDocument', 'bankStatement');
+            $this->reset('profilePicture', 'ssmCertificate', 'identityDocument', 'bankStatement');
             $this->saved = true;
 
             return $this->redirectRoute('owner.dashboard');
         }
 
         $this->isEditing = false;
-        $this->reset('ssmCertificate', 'identityDocument', 'bankStatement');
+        $this->reset('profilePicture', 'ssmCertificate', 'identityDocument', 'bankStatement');
         $this->saved = true;
     }
 
@@ -294,6 +315,6 @@ class ProfilePage extends Component
 
     public function render(): View
     {
-        return view('livewire.owner.profile-page');
+        return view('livewire.owner.auth.profile-page');
     }
 }

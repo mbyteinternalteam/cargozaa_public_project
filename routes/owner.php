@@ -3,11 +3,12 @@
 use App\Http\Controllers\OwnerAuthController;
 use App\Http\Controllers\OwnerLoginController;
 use App\Http\Controllers\OwnerProfileController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Livewire\Owner\Containers\CreatePage;
+use App\Livewire\Owner\Containers\EditPage;
+use App\Livewire\Owner\Containers\IndexPage;
+use App\Livewire\Owner\Containers\ShowPage;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
-
 
 Route::prefix('owner')->name('owner.')->group(function (): void {
     Route::get('login', [OwnerLoginController::class, 'show'])
@@ -29,6 +30,17 @@ Route::prefix('owner')->name('owner.')->group(function (): void {
         Route::get('dashboard', function (): View {
             return view('owner.dashboard');
         })->name('dashboard');
+
+        Route::get('containers', IndexPage::class)
+            ->name('containers.index');
+
+        Route::get('containers/create', CreatePage::class)
+            ->name('containers.create');
+
+        Route::get('containers/{container}/edit', EditPage::class)
+            ->name('containers.edit');
+
+        Route::get('containers/{container}', ShowPage::class)
+            ->name('containers.show');
     });
 });
-

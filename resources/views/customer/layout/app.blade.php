@@ -2,6 +2,5 @@
 
 @section('content')
     {{ $slot ?? '' }}
-    @yield('owner-content')
+    @yield('customer-content')
 @endsection
-

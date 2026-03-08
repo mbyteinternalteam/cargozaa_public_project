@@ -9,13 +9,24 @@
         <div class="rounded-2xl border border-gray-100 dark:border-gray-700 p-6 bg-white dark:bg-card">
             <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-4">
                 <div class="flex items-center gap-6">
+                    @php($owner = auth()->user()?->owner)
                     <div class="relative">
-                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white text-2xl font-bold">
-                            {{ $this->initials }}
-                        </div>
-                        <div class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-secondary flex items-center justify-center shadow-lg">
-                            <x-heroicon-s-camera class="w-4 h-4 text-primary" />
-                        </div>
+                        <label class="cursor-pointer block">
+                            @if($owner?->profile_picture)
+                                <img src="{{ \Illuminate\Support\Facades\Storage::url($owner->profile_picture) }}" alt="Profile"
+                                    class="w-20 h-20 rounded-full object-cover ring-2 ring-gray-100">
+                            @else
+                                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+                                    {{ $this->initials }}
+                                </div>
+                            @endif
+                            <div class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-secondary flex items-center justify-center shadow-lg pointer-events-none">
+                                <x-heroicon-s-camera class="w-4 h-4 text-primary" />
+                            </div>
+                            <input type="file" wire:model="profilePicture" class="sr-only" accept="image/jpeg,image/png,image/jpg">
+                        </label>
+                        <div wire:loading wire:target="profilePicture" class="absolute inset-0 flex items-center justify-center rounded-full bg-black/30 text-white text-xs">Uploading...</div>
+                        @error('profilePicture')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <h2 class="text-foreground text-xl font-bold mb-1">{{ $businessName ?: 'Business name' }}</h2>
@@ -27,10 +38,6 @@
                                     <span class="text-green-700 dark:text-green-400 text-xs font-semibold">Verified Owner</span>
                                 </span>
                             @endif
-                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
-                                <x-heroicon-s-shield-check class="w-4 h-4 text-blue-600" />
-                                <span class="text-blue-700 dark:text-blue-400 text-xs font-semibold">Premium Member</span>
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -153,9 +160,14 @@
                 <div>
                     <label class="text-sm text-gray-500 mb-2 block font-semibold">SSM Certificate</label>
                     <div class="flex items-center gap-3">
-                        <div class="flex-1 text-sm text-gray-600">
-                            {{ $owner?->ssm_document ? basename($owner->ssm_document) : 'No file' }}
-                        </div>
+                        @if($owner?->ssm_document)
+                            <a href="{{ \Illuminate\Support\Facades\Storage::url($owner->ssm_document) }}" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-sm btn-ghost gap-1.5">
+                                <x-heroicon-s-eye class="w-4 h-4" /> View
+                            </a>
+                        @else
+                            <span class="text-sm text-gray-500">No file</span>
+                        @endif
                         @if($isEditing && ! $this->isFirstTime)
                             <input type="file" wire:model="ssmCertificate" class="file-input file-input-bordered file-input-sm w-full max-w-xs" accept=".pdf,.jpg,.jpeg,.png" />
                         @endif
@@ -266,9 +278,14 @@
                     <label class="text-sm text-gray-500 mb-2 block font-semibold">Bank Statement</label>
                     @php($bankPath = is_array($owner?->bank_statement) ? ($owner->bank_statement['path'] ?? null) : null)
                     <div class="flex items-center gap-3">
-                        <div class="flex-1 text-sm text-gray-600">
-                            {{ $bankPath ? basename($bankPath) : 'No file' }}
-                        </div>
+                        @if($bankPath)
+                            <a href="{{ \Illuminate\Support\Facades\Storage::url($bankPath) }}" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-sm btn-ghost gap-1.5">
+                                <x-heroicon-s-eye class="w-4 h-4" /> View
+                            </a>
+                        @else
+                            <span class="text-sm text-gray-500">No file</span>
+                        @endif
                         @if($isEditing)
                             <input type="file" wire:model="bankStatement" class="file-input file-input-bordered file-input-sm w-full max-w-xs" accept=".pdf,.jpg,.jpeg,.png" />
                         @endif

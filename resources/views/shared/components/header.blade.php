@@ -81,7 +81,13 @@
                             <li><a href="{{ route('owner.signup') }}" class="font-semibold text-[#000080]"><x-heroicon-s-user-plus class="w-4 h-4" /> Sign Up</a></li>
                         @else
                             <li><a href="{{ route('owner.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
-                            <li><a href="{{ route('logout') }}" class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</a></li>
+                            <li><a href="{{ route('owner.profile') }}"><x-heroicon-s-user class="w-4 h-4" /> View Profile</a></li>
+                           <form action="{{ route('logout') }}" method="post">
+                            @csrf
+                            <li>
+                                <button type="submit"><a class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</a></button></li>
+                            {{-- <button type="submit" class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</button> --}}
+                           </form>
                         @endguest
                     </ul>
                 </div>
