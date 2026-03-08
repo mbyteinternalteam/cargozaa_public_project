@@ -3,6 +3,7 @@
 namespace App\Livewire\Owner;
 
 use App\Enums\BusinessType;
+use App\Enums\KYCAction;
 use App\Enums\KYCStatus;
 use App\Enums\UserStatus;
 use App\Enums\UserType;

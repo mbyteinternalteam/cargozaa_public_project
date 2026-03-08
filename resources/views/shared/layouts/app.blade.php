@@ -4,7 +4,7 @@
     <div class="min-h-screen flex flex-col bg-background text-foreground">
         @include('shared.components.header')
 
-        <main class="flex-1">
+        <main class="flex-1 pt-[72px]">
             @yield('content')
         </main>
 

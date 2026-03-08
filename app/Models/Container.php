@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ContainerStatus;
+use App\Models\Config\ContainerStructure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +13,15 @@ class Container extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'container';
+
+    public function getContainerStructureName(): array
+    {
+        return [
+            'type' => ContainerStructure::find($this->container_type)->name,
+            'size' => ContainerStructure::find($this->container_size)->name,
+            'condition' => ContainerStructure::find($this->container_condition)->name,
+        ];
+    }
 
     protected $fillable = [
         'owner_id',
@@ -24,7 +34,8 @@ class Container extends Model
         'year_built',
         'last_inspection_date',
         'serial_number',
-        'location',
+        'latitude',
+        'longitude',
         'full_address',
         'daily_rate',
         'weekly_rate',
@@ -45,6 +56,8 @@ class Container extends Model
     protected function casts(): array
     {
         return [
+            'latitude' => 'decimal:8',
+            'longitude' => 'decimal:8',
             'last_inspection_date' => 'date',
             'daily_rate' => 'decimal:2',
             'weekly_rate' => 'decimal:2',
@@ -60,6 +73,14 @@ class Container extends Model
             'status' => ContainerStatus::class,
             'unlisted' => 'bool',
         ];
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($container) {
+            $container->display_id = 'CNT-'.str_pad((string) (Container::max('id') + 1), 5, '0', STR_PAD_LEFT);
+        });
     }
 
     public function owner()
