@@ -109,10 +109,10 @@
                 <div class="rounded-2xl border border-gray-100 p-4">
                     @if($container->images && count($container->images) > 0)
                         <div class="space-y-3">
-                            <div class="relative rounded-2xl overflow-hidden">
+                            <div class="group relative rounded-2xl overflow-hidden cursor-zoom-in">
                                 <img src="{{ \Illuminate\Support\Facades\Storage::url($container->images[$activeImage] ?? $container->images[0]) }}"
                                      alt="{{ $container->title }}"
-                                     class="w-full h-72 object-cover">
+                                     class="w-full h-72 object-cover transition-transform duration-300 ease-out group-hover:scale-110">
                                 <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/90 text-[12px] text-gray-700 font-medium shadow-sm">
                                     {{ $activeImage + 1 }} / {{ count($container->images) }}
                                 </div>
@@ -219,8 +219,8 @@
                                             <td>{{ $req->created_at->format('d M Y H:i') }}</td>
                                             <td>
                                                 <span class="badge badge-sm p-1
-                                                    {{ $req->status->value === 'pending' ? 'badge-warning' : ($req->status->value === 'approved' ? 'badge-success' : 'badge-error') }}">
-                                                    {{ ucfirst($req->status->value) }}
+                                                    {{ \App\Enums\ContainerUpdateRequestStatus::from($req->status->value)->color() }}">
+                                                    {{ ucfirst(\App\Enums\ContainerUpdateRequestStatus::from($req->status->value)->label()) }}
                                                 </span>
                                             </td>
                                             <td>{{ $req->reviewed_at?->format('d M Y H:i') ?? '—' }}</td>
@@ -320,6 +320,20 @@
                                         <div class="flex flex-wrap gap-1.5">
                                             @foreach($d['features'] as $f)
                                                 <span class="badge badge-sm badge-success p-1 text-white">{{ $f }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                                @if(!empty($d['images']))
+                                    <div class="p-3 rounded-lg bg-gray-50">
+                                        <span class="text-gray-600 block mb-2">Images</span>
+                                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                            @foreach($d['images'] as $img)
+                                                <a href="{{ \Illuminate\Support\Facades\Storage::url($img) }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block rounded-lg overflow-hidden border border-gray-200 aspect-square">
+                                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($img) }}" alt="Container image"
+                                                        class="w-full h-full object-cover hover:scale-105 transition-transform">
+                                                </a>
                                             @endforeach
                                         </div>
                                     </div>

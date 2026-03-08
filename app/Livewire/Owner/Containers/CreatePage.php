@@ -187,15 +187,15 @@ class CreatePage extends Component
             'longitude' => $validated['longitude'],
             'location' => $validated['location'],
             'full_address' => $validated['full_address'] ?? null,
-            'daily_rate' => $validated['daily_rate'],
-            'weekly_rate' => $validated['weekly_rate'] ?? 0,
-            'monthly_rate' => $validated['monthly_rate'] ?? 0,
-            'length' => $validated['length'] ?? 0,
-            'width' => $validated['width'] ?? 0,
-            'height' => $validated['height'] ?? 0,
-            'max_weight' => $validated['max_weight'] ?? 0,
-            'tare_weight' => $validated['tare_weight'] ?? 0,
-            'cargo_capacity' => $validated['cargo_capacity'] ?? 0,
+            'daily_rate' => round((float) $validated['daily_rate'], 2),
+            'weekly_rate' => round((float) $validated['weekly_rate'], 2) ?? 0,
+            'monthly_rate' => round((float) $validated['monthly_rate'], 2) ?? 0,
+            'length' => round((float) $validated['length'], 2) ?? 0,
+            'width' => round((float) $validated['width'], 2) ?? 0,
+            'height' => round((float) $validated['height'], 2) ?? 0,
+            'max_weight' => round((float) $validated['max_weight'], 2) ?? 0,
+            'tare_weight' => round((float) $validated['tare_weight'], 2) ?? 0,
+            'cargo_capacity' => round((float) $validated['cargo_capacity'], 2) ?? 0,
             'features' => $validated['features'] ?? [],
             'images' => [],
             'status' => ContainerStatus::Pending,
@@ -217,6 +217,8 @@ class CreatePage extends Component
 
         $container->images = $storedImages;
         $container->save();
+
+        // TODO: Send email to admin for approval
 
         return redirect()
             ->route('owner.containers.show', $container)

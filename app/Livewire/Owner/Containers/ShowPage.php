@@ -104,7 +104,7 @@ class ShowPage extends Component
         $hasPendingUpdateRequest = ContainerUpdateRequest::query()
             ->where('container_id', $this->container->id)
             ->orderByDesc('created_at')
-            ->first()?->status === ContainerUpdateRequestStatus::Pending;
+            ->value('status') === ContainerUpdateRequestStatus::Pending->value;
 
         return view('livewire.owner.containers.show-page', compact('updateRequests', 'viewingRequest', 'reasonModalRequest', 'hasPendingUpdateRequest'));
     }

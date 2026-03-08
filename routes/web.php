@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\OwnerAuthController;
-use App\Http\Controllers\OwnerLoginController;
-use App\Http\Controllers\OwnerProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -12,7 +9,8 @@ Route::get('/', function (): View {
     return view('welcome');
 });
 
-Route::get('/login', fn () => redirect()->route('owner.login'))->name('login');
+Route::get('/signup', fn (): View => view('customer.auth.signup'))->name('signup');
+Route::get('/login', fn (): View => view('customer.auth.login'))->name('login');
 
 Route::post('/logout', function (Request $request) {
     Auth::logout();
@@ -22,7 +20,6 @@ Route::post('/logout', function (Request $request) {
 
     return redirect()->route('owner.login');
 })->middleware('auth')->name('logout');
-
 
 require __DIR__.'/owner.php';
 

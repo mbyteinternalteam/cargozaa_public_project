@@ -17,6 +17,37 @@ class IndexPage extends Component
 {
     use WithPagination;
 
+    public ?int $deleteContainerId = null;
+
+    public function confirmDelete(int $id): void
+    {
+        $this->deleteContainerId = $id;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->deleteContainerId = null;
+    }
+
+    public function deleteContainer(): void
+    {
+        if ($this->deleteContainerId === null) {
+            return;
+        }
+
+        $owner = Auth::user()?->owner;
+        if ($owner === null) {
+            abort(403);
+        }
+
+        $container = Container::query()->where('owner_id', $owner->id)->find($this->deleteContainerId);
+        if ($container) {
+            $container->delete();
+        }
+
+        $this->deleteContainerId = null;
+    }
+
     public function render(): View
     {
         $owner = Auth::user()?->owner;
