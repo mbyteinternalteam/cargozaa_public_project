@@ -143,7 +143,7 @@ class SignupForm extends Component
 
     public function render()
     {
-        return view('livewire.owner.signup-form');
+        return view('livewire.owner.auth.signup-form');
     }
 }
 
