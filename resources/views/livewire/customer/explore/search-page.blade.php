@@ -336,17 +336,29 @@
                                     @endif
                                 </div>
                                 @php
-                                    // Use markup as the customer-facing price; fallback to base rate if needed
                                     $dailyPrice = (float) ($container->daily_markup ?: $container->daily_rate);
                                     $monthlyPrice = (float) ($container->monthly_markup ?: $container->monthly_rate);
+                                    $isGuest = auth()->guest();
                                 @endphp
                                 <div class="flex items-end justify-between border-t border-gray-50 pt-3">
-                                    <div>
-                                        <span class="text-[#000080] text-[18px] font-bold">RM {{ number_format($dailyPrice, 0) }}</span>
-                                        <span class="text-gray-400 text-[13px]"> /day</span>
-                                        <p class="text-gray-400 text-[12px]">RM {{ number_format($monthlyPrice, 0) }} /month</p>
-                                    </div>
-                                    {{-- <span class="text-[13px] text-[#000080] px-3 py-1.5 rounded-lg bg-[#000080]/5 hover:bg-[#000080]/10 transition-colors font-semibold">View Details</span> --}}
+                                    @if($isGuest)
+                                        <div onclick="event.preventDefault(); event.stopPropagation(); window.location='{{ route('login') }}'"
+                                             class="block cursor-pointer group grow" role="button" tabindex="0"
+                                             title="Sign in to view price">
+                                            <div class="blur-[4px] select-none group-hover:blur-[3px] transition-all">
+                                                <span class="text-[#000080] text-[18px] font-bold">RM ---</span>
+                                                <span class="text-gray-400 text-[13px]"> /day</span>
+                                                <p class="text-gray-400 text-[12px]">RM --- /month</p>
+                                            </div>
+                                            <p class="text-[11px] text-amber-600 font-medium mt-1">Sign in to view price</p>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <span class="text-[#000080] text-[18px] font-bold">RM {{ number_format($dailyPrice, 0) }}</span>
+                                            <span class="text-gray-400 text-[13px]"> /day</span>
+                                            <p class="text-gray-400 text-[12px]">RM {{ number_format($monthlyPrice, 0) }} /month</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </a>

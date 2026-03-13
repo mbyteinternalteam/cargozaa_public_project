@@ -15,7 +15,7 @@
         $navLinks = [
             ['href' => '/', 'label' => 'Home'],
             ['href' => route('customer.search'), 'label' => 'Explore'],
-            ['href' => '/customer/leases', 'label' => 'Leases'],
+            ['href' => route('customer.leases'), 'label' => 'Leases'],
         ];
     } elseif ($user->user_type === UserType::OWNER) {
         // Owner
@@ -36,12 +36,8 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex items-center justify-between h-[72px]">
             <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
-                <div class="w-10 h-10 rounded-xl bg-[#000080] flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <x-heroicon-s-cube class="w-5 h-5 text-[#FFD700]" />
-                </div>
-                <span class="text-[22px] tracking-tight text-[#000080] font-bold">
-                    Cargo<span class="text-[#FFD700]">zaa</span>
-                </span>
+               
+                <img src="{{ asset('img/logo.png') }}" alt="Cargozaa Logo" class=" h-8">
             </a>
 
             <div class="hidden lg:flex items-center gap-8">
@@ -55,7 +51,7 @@
                        class="text-[14px] transition-colors relative py-1 {{ $active ? 'text-[#000080] font-semibold' : 'text-gray-600 hover:text-[#000080]' }}">
                         {{ $link['label'] }}
                         @if($active)
-                            <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#FFD700] rounded-full"></span>
+                            <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#FFD700] roundexd-full"></span>
                         @endif
                     </a>
                 @endforeach

@@ -3,9 +3,9 @@
     $imageCount = count($images);
     $hasGps = $container->latitude && $container->longitude;
     $ownerInitials = collect(explode(' ', $container->owner?->business_name ?? 'O'))->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->take(2)->join('');
-    // Use markup as final customer price; fallback to base rate
     $dailyRate = (float) ($container->daily_markup ?: $container->daily_rate);
     $monthlyRate = (float) ($container->monthly_markup ?: $container->monthly_rate);
+    $isGuest = auth()->guest();
 @endphp
 
 <div class="bg-white min-h-screen">
@@ -222,7 +222,14 @@
                                             $scDailyPrice = (float) ($sc->daily_markup ?: $sc->daily_rate);
                                         @endphp
                                         <div class="flex items-center justify-between mt-3">
-                                            <span class="text-[#000080] font-bold">RM {{ number_format($scDailyPrice, 0) }}/day</span>
+                                            @if($isGuest)
+                                                <a href="{{ route('login') }}" class="block" title="Sign in to view price">
+                                                    <span class="text-[#000080] font-bold blur-[4px] select-none">RM --- /day</span>
+                                                    <span class="block text-amber-600 text-[11px] font-medium mt-1">Sign in to view</span>
+                                                </a>
+                                            @else
+                                                <span class="text-[#000080] font-bold">RM {{ number_format($scDailyPrice, 0) }}/day</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </a>
@@ -238,12 +245,25 @@
                     <div class="rounded-2xl border border-gray-200 p-6 shadow-sm">
                         {{-- Price --}}
                         <div class="mb-6">
-                            <div class="flex items-baseline gap-1">
-                                <span class="text-[#000080] text-[32px] font-bold">RM {{ number_format($dailyRate, 0) }}</span>
-                                <span class="text-gray-400 text-[15px]">/day</span>
-                            </div>
-                            @if($monthlyRate > 0)
-                                <p class="text-gray-500 text-[13px]">RM {{ number_format($monthlyRate, 0) }} /month</p>
+                            @if($isGuest)
+                                <a href="{{ route('login') }}" class="block" title="Sign in to view price">
+                                    <div class="blur-[5px] select-none">
+                                        <span class="text-[#000080] text-[32px] font-bold">RM ---</span>
+                                        <span class="text-gray-400 text-[15px]">/day</span>
+                                        @if($monthlyRate > 0)
+                                            <p class="text-gray-500 text-[13px]">RM --- /month</p>
+                                        @endif
+                                    </div>
+                                    <p class="text-amber-600 text-[13px] font-medium mt-1">Sign in to view price</p>
+                                </a>
+                            @else
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-[#000080] text-[32px] font-bold">RM {{ number_format($dailyRate, 0) }}</span>
+                                    <span class="text-gray-400 text-[15px]">/day</span>
+                                </div>
+                                @if($monthlyRate > 0)
+                                    <p class="text-gray-500 text-[13px]">RM {{ number_format($monthlyRate, 0) }} /month</p>
+                                @endif
                             @endif
                         </div>
 
@@ -302,9 +322,13 @@
                                         class="w-full p-3 rounded-xl border text-left transition-all {{ $selectedInsuranceId === $ins->id ? 'border-[#000080] bg-[#000080]/5' : 'border-gray-200 hover:border-gray-300' }}">
                                         <div class="flex items-center justify-between">
                                             <span class="text-[14px] text-[#1a1a2e] font-semibold">{{ $ins->name }}</span>
-                                            <span class="text-[13px] text-[#000080] font-semibold">
-                                                {{ $ins->daily_rate > 0 ? 'RM ' . number_format($ins->daily_rate, 0) . '/day' : 'Free' }}
-                                            </span>
+                                            @if($isGuest)
+                                                <span class="text-[13px] text-[#000080] font-semibold blur-[3px] select-none">RM **</span>
+                                            @else
+                                                <span class="text-[13px] text-[#000080] font-semibold">
+                                                    {{ $ins->daily_rate > 0 ? 'RM ' . number_format($ins->daily_rate, 0) . '/day' : 'Free' }}
+                                                </span>
+                                            @endif
                                         </div>
                                         <p class="text-[12px] text-gray-400 mt-0.5">{{ $ins->description }}</p>
                                     </button>
@@ -322,33 +346,64 @@
                             $grandTotal = $leaseTotal + $insuranceTotal + $serviceFee;
                         @endphp
                         <div class="border-t border-gray-100 pt-4 mb-6 space-y-2">
-                            <div class="flex justify-between text-[14px]">
-                                <span class="text-gray-500">Container lease ({{ $leaseDays }} days)</span>
-                                <span class="text-[#1a1a2e] font-medium">RM {{ number_format($leaseTotal, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between text-[14px]">
-                                <span class="text-gray-500">Insurance ({{ $selectedInsurance?->name ?? 'None' }})</span>
-                                <span class="text-[#1a1a2e] font-medium">RM {{ number_format($insuranceTotal, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between text-[14px]">
-                                <span class="text-gray-500">Service fee</span>
-                                <span class="text-[#1a1a2e] font-medium">RM {{ number_format($serviceFee, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between text-[16px] pt-2 border-t border-gray-100">
-                                <span class="font-semibold">Total</span>
-                                <span class="text-[#000080] font-bold">RM {{ number_format($grandTotal, 2) }}</span>
-                            </div>
+                            @if($isGuest)
+                                <a href="{{ route('login') }}" class="block">
+                                    <div class="blur-[4px] select-none space-y-2">
+                                        <div class="flex justify-between text-[14px]">
+                                            <span class="text-gray-500">Container lease ({{ $leaseDays }} days)</span>
+                                            <span class="text-[#1a1a2e] font-medium">RM {{ number_format($leaseTotal, 2) }}</span>
+                                        </div>
+                                        <div class="flex justify-between text-[14px]">
+                                            <span class="text-gray-500">Insurance ({{ $selectedInsurance?->name ?? 'None' }})</span>
+                                            <span class="text-[#1a1a2e] font-medium">RM {{ number_format($insuranceTotal, 2) }}</span>
+                                        </div>
+                                        <div class="flex justify-between text-[14px]">
+                                            <span class="text-gray-500">Service fee</span>
+                                            <span class="text-[#1a1a2e] font-medium">RM {{ number_format($serviceFee, 2) }}</span>
+                                        </div>
+                                        <div class="flex justify-between text-[16px] pt-2 border-t border-gray-100">
+                                            <span class="font-semibold">Total</span>
+                                            <span class="text-[#000080] font-bold">RM {{ number_format($grandTotal, 2) }}</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-amber-600 text-[13px] font-medium mt-2">Sign in to view breakdown</p>
+                                </a>
+                            @else
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-[14px]">
+                                        <span class="text-gray-500">Container lease ({{ $leaseDays }} days)</span>
+                                        <span class="text-[#1a1a2e] font-medium">RM {{ number_format($leaseTotal, 2) }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-[14px]">
+                                        <span class="text-gray-500">Insurance ({{ $selectedInsurance?->name ?? 'None' }})</span>
+                                        <span class="text-[#1a1a2e] font-medium">RM {{ number_format($insuranceTotal, 2) }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-[14px]">
+                                        <span class="text-gray-500">Service fee</span>
+                                        <span class="text-[#1a1a2e] font-medium">RM {{ number_format($serviceFee, 2) }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-[16px] pt-2 border-t border-gray-100">
+                                        <span class="font-semibold">Total</span>
+                                        <span class="text-[#000080] font-bold">RM {{ number_format($grandTotal, 2) }}</span>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         {{-- Book Now --}}
-                        <button type="button" wire:click="bookNow"
-                           class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#000080] text-white hover:bg-[#000060] transition-all text-[15px] font-semibold">
-                            <span wire:loading.remove wire:target="bookNow">
-                                {{ auth()->check() ? 'Book Now' : 'Sign in to Book' }}
-                            </span>
-                            <span wire:loading wire:target="bookNow">Processing...</span>
-                            <x-heroicon-s-arrow-right class="w-4 h-4" />
-                        </button>
+                        @if($isGuest)
+                            <a href="{{ route('login') }}"
+                               class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#000080] text-white hover:bg-[#000060] transition-all text-[15px] font-semibold">
+                                Sign in to Book <x-heroicon-s-arrow-right class="w-4 h-4" />
+                            </a>
+                        @else
+                            <button type="button" wire:click="bookNow"
+                               class="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#000080] text-white hover:bg-[#000060] transition-all text-[15px] font-semibold">
+                                <span wire:loading.remove wire:target="bookNow">Book Now</span>
+                                <span wire:loading wire:target="bookNow">Processing...</span>
+                                <x-heroicon-s-arrow-right class="w-4 h-4" />
+                            </button>
+                        @endif
                         <p class="text-center text-gray-400 text-[12px] mt-3">You won't be charged yet</p>
 
                         {{-- Features --}}

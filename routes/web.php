@@ -9,9 +9,7 @@ require __DIR__.'/owner.php';
 
 require __DIR__.'/customer.php';
 
-Route::get('/', function (): View {
-    return view('welcome');
-});
+Route::get('/', \App\Livewire\LandingPage::class)->name('home');
 
 Route::get('/signup', fn (): View => view('customer.auth.signup'))->name('signup');
 Route::get('/login', fn (): View => view('customer.auth.login'))->name('login');

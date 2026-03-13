@@ -3,12 +3,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             <div>
                 <div class="flex items-center gap-2.5 mb-5">
-                    <div class="w-10 h-10 rounded-xl bg-[#FFD700] flex items-center justify-center">
+                    {{-- <div class="w-10 h-10 rounded-xl bg-[#FFD700] flex items-center justify-center">
                         <x-heroicon-s-cube class="w-5 h-5 text-[#000080]" />
                     </div>
                     <span class="text-[22px] tracking-tight text-white font-bold">
                         Cargo<span class="text-[#FFD700]">zaa</span>
-                    </span>
+                    </span> --}}
+                    <img src="{{ asset('img/logo.png') }}" alt="Cargozaa Logo" class="h-10">
                 </div>
                 <p class="text-white/70 text-[14px] mb-6 leading-relaxed">
                     The trusted marketplace for container leasing. Connect with verified owners, lease with confidence.
