@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
-
 require __DIR__.'/owner.php';
 
 require __DIR__.'/customer.php';

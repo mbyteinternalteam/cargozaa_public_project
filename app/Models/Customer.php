@@ -33,4 +33,9 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function billingState()
+    {
+        return $this->belongsTo(State::class, 'billing_state');
+    }
 }
