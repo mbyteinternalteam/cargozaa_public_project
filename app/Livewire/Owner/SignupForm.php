@@ -26,7 +26,12 @@ class SignupForm extends Component
     #[Validate('required|string|email:rfc,dns|max:255|unique:users,email')]
     public string $email = '';
 
-    #[Validate('required|string|max:30')]
+    #[Validate([
+        'required',
+        'string',
+        'regex:/^(60[0-9]{9,10}|01[0-9]{7,9})$/',
+        'max:12'
+    ])]
     public string $phone = '';
 
     #[Validate('required|string|max:255')]
@@ -58,7 +63,7 @@ class SignupForm extends Component
     #[Validate('required|integer|exists:states,id')]
     public int|string $registeredStateId = '';
 
-    #[Validate('required|string|max:50')]
+    #[Validate('required|string|max:12')]
     public string $ownerIcNumber = '';
 
     #[Validate('required|string|in:nric,passport')]
@@ -91,6 +96,16 @@ class SignupForm extends Component
     {
         $this->reset();
         return redirect()->route('owner.login');
+    }
+
+    public function updatedOwnerIcNumber(): void
+    {
+        $this->validateOnly('ownerIcNumber');
+    }
+
+    public function updatedPhone(): void
+    {
+        $this->validateOnly('phone');
     }
 
     public function submit(): void

@@ -2,6 +2,6 @@
 
 @section('title', 'Owner Dashboard')
 
-{{-- @section('content') --}}
-    <livewire:owner.dashboard />
-{{-- @endsection --}}
+@section('owner-content')
+    <livewire:owner-dashboard />
+@endsection
