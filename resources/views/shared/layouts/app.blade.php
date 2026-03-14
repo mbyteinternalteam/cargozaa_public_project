@@ -5,6 +5,7 @@
         @include('shared.components.header')
 
         <main class="flex-1 pt-[72px]">
+            {{ $slot ?? '' }}
             @yield('content')
         </main>
 

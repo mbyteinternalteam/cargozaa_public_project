@@ -8,12 +8,13 @@
         // Guest
         $navLinks = [
             ['href' => '/', 'label' => 'Home'],
+            ['href' => route('customer.search'), 'label' => 'Explore'],
         ];
     } elseif ($user->user_type === UserType::CUSTOMER) {
         // Customer
         $navLinks = [
             ['href' => '/', 'label' => 'Home'],
-            ['href' => '/search', 'label' => 'Explore'],
+            ['href' => route('customer.search'), 'label' => 'Explore'],
             ['href' => '/customer/leases', 'label' => 'Leases'],
         ];
     } elseif ($user->user_type === UserType::OWNER) {
@@ -80,8 +81,13 @@
                             <li><a href="{{ route('owner.login') }}"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4" /> Log In</a></li>
                             <li><a href="{{ route('owner.signup') }}" class="font-semibold text-[#000080]"><x-heroicon-s-user-plus class="w-4 h-4" /> Sign Up</a></li>
                         @else
-                            <li><a href="{{ route('owner.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
-                            <li><a href="{{ route('owner.profile') }}"><x-heroicon-s-user class="w-4 h-4" /> View Profile</a></li>
+                            @if($user->user_type === UserType::CUSTOMER)
+                                <li><a href="{{ route('customer.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
+                                <li><a href="{{ route('customer.profile') }}"><x-heroicon-s-user class="w-4 h-4" /> View Profile</a></li>
+                            @else
+                                <li><a href="{{ route('owner.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
+                                <li><a href="{{ route('owner.profile') }}"><x-heroicon-s-user class="w-4 h-4" /> View Profile</a></li>
+                            @endif
                            <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <li>
