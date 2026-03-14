@@ -12,7 +12,7 @@ class EnsureUserIsCustomer
     public function handle(Request $request, Closure $next): Response
     {
         if (! $request->user() || $request->user()->user_type !== UserType::CUSTOMER) {
-            return redirect()->route('customer.login');
+            return redirect()->route('login');
         }
 
         return $next($request);
