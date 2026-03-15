@@ -40,12 +40,16 @@
                                     <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                                     </svg>
-                                @else
+                                @elseif($stat['trend'] === 'down')
                                     <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
                                     </svg>
+                                @else
+                                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"></path>
+                                    </svg>
                                 @endif
-                                <span class="text-sm font-semibold {{ $stat['trend'] === 'up' ? 'text-green-600' : 'text-red-600' }}">
+                                <span class="text-sm font-semibold {{ $stat['trend'] === 'up' ? 'text-green-600' : ($stat['trend'] === 'down' ? 'text-red-600' : 'text-gray-600') }}">
                                     {{ $stat['change'] }}
                                 </span>
                                 <span class="text-xs text-gray-500">vs last period</span>

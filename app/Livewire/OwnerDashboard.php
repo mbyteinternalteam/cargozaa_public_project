@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Service\ContainerService;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -12,6 +14,8 @@ class OwnerDashboard extends Component
 {
     public $selectedPeriod = 'last_6_months';
     
+    protected ContainerService $containerService;
+    
     public array $periods = [
         'last_7_days' => 'Last 7 Days',
         'last_30_days' => 'Last 30 Days',
@@ -19,6 +23,11 @@ class OwnerDashboard extends Component
         'last_6_months' => 'Last 6 Months',
         'last_year' => 'Last Year',
     ];
+
+    public function boot(ContainerService $containerService): void
+    {
+        $this->containerService = $containerService;
+    }
 
     public function mount()
     {
@@ -31,8 +40,23 @@ class OwnerDashboard extends Component
         $this->selectedPeriod = $value;
     }
 
+
     public function getStatsProperty()
     {
+        $ownerId = Auth::user()?->owner?->id;
+        if (!$ownerId) {
+            return [];
+        }
+
+        $currentActiveCount = $this->containerService->getCurrentMonthActiveContainersCount($ownerId);
+        $previousActiveCount = $this->containerService->getPreviousMonthActiveContainersCount($ownerId);
+        
+        // Calculate change
+        $change = $currentActiveCount - $previousActiveCount;
+        $changeType = $change > 0 ? 'positive' : ($change < 0 ? 'negative' : 'neutral');
+        $changeText = $change > 0 ? "+{$change}" : ($change < 0 ? (string)$change : '0');
+        $trend = $change > 0 ? 'up' : ($change < 0 ? 'down' : 'neutral');
+        
         return [
             'totalRevenue' => [
                 'title' => 'Total Revenue',
@@ -47,14 +71,14 @@ class OwnerDashboard extends Component
             ],
             'activeContainers' => [
                 'title' => 'Active Containers',
-                'value' => '32',
-                'change' => '+3',
-                'changeType' => 'positive',
+                'value' => $currentActiveCount,
+                'change' => $changeText,
+                'changeType' => $changeType,
                 'comparison' => 'vs last month',
                 'icon' => 'package',
                 'color' => '#FFD700',
                 'bgColor' => '#FFF9E6',
-                'trend' => 'up'
+                'trend' => $trend
             ],
             'totalBookings' => [
                 'title' => 'Total Bookings',

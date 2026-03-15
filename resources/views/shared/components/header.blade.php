@@ -21,8 +21,8 @@
         // Owner
         $navLinks = [
             ['href' => route('owner.dashboard'), 'label' => 'Dashboard'],
-            ['href' => '/owner/containers', 'label' => 'My Container'],
-            ['href' => '/owner/orders', 'label' => 'Orders'],
+            ['href' => route('owner.containers.index'), 'label' => 'My Container'],
+            ['href' => route('owner.orders.index'), 'label' => 'Orders'],
             ['href' => '/owner/finance', 'label' => 'My Finance'],
         ];
     } else {
@@ -83,14 +83,13 @@
                                 <li><a href="{{ route('customer.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
                                 <li><a href="{{ route('customer.profile') }}"><x-heroicon-s-user class="w-4 h-4" /> View Profile</a></li>
                             @else
-                                <li><a href="{{ route('owner.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>
                                 <li><a href="{{ route('owner.profile') }}"><x-heroicon-s-user class="w-4 h-4" /> View Profile</a></li>
                             @endif
                            <form action="{{ route('logout') }}" method="post">
                             @csrf
                             <li>
-                                <button type="submit"><a class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</a></button></li>
-                            {{-- <button type="submit" class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</button> --}}
+                                <button type="submit" class="text-red-500 hover:text-red-600"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4 text-red-500 hover:text-red-600" /> Log Out</button>
+                            </li>
                            </form>
                         @endguest
                     </ul>
@@ -98,10 +97,112 @@
             </div>
 
             <div class="lg:hidden flex items-center gap-2">
-                <a href="{{ url('/search') }}"
+                <!-- Mobile Menu Toggle -->
+                <div class="drawer">
+                    <input id="mobile-drawer" type="checkbox" class="drawer-toggle" />
+                    <div class="drawer-content">
+                        <label for="mobile-drawer" class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer">
+                            <x-heroicon-s-bars-3 class="w-4 h-4 text-gray-600" />
+                        </label>
+                    </div>
+                    <div class="drawer-side z-[60]">
+                        <label for="mobile-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+                        <div class="menu bg-white min-h-full w-80 p-4">
+                            <!-- Close button -->
+                            <div class="flex justify-end mb-4">
+                                <label for="mobile-drawer" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+                                    <x-heroicon-s-x-mark class="w-4 h-4 text-gray-600" />
+                                </label>
+                            </div>
+                            
+                            <!-- Logo -->
+                            <div class="flex items-center gap-2.5 mb-8">
+                                <img src="{{ asset('img/logo.png') }}" alt="Cargozaa Logo" class="h-8">
+                            </div>
+
+                            <!-- Navigation Links -->
+                            <ul class="menu menu-vertical gap-2">
+                                @foreach ($navLinks as $link)
+                                    @php
+                                        $href = $link['href'];
+                                        $url = str_starts_with($href, 'http') ? $href : url($href);
+                                        $path = parse_url($href, PHP_URL_PATH) ?? '/';
+                                        $active = $path === '/'
+                                            ? request()->is('/')
+                                            : request()->fullUrlIs($url) || request()->is(ltrim($path, '/').'*');
+                                    @endphp
+                                    <li>
+                                        <a href="{{ $url }}"
+                                           class="text-[14px] transition-colors relative py-3 px-4 rounded-lg {{ $active ? 'text-[#000080] font-semibold bg-[#000080]/10' : 'text-gray-600 hover:text-[#000080] hover:bg-gray-50' }}">
+                                            {{ $link['label'] }}
+                                            @if($active)
+                                                <span class="absolute top-1/2 -translate-y-1/2 right-4 w-2 h-2 bg-[#FFD700] rounded-full"></span>
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+
+                            <!-- User Section -->
+                            <div class="border-t border-gray-200 mt-6 pt-6">
+                                @guest
+                                    <div class="space-y-2">
+                                        <a href="{{ route('login') }}" class="flex items-center gap-3 text-gray-600 hover:text-[#000080] py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors">
+                                            <x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4" />
+                                            Log In
+                                        </a>
+                                        <a href="{{ route('signup') }}" class="flex items-center gap-3 text-[#000080] font-semibold py-3 px-4 rounded-lg hover:bg-[#000080]/10 transition-colors">
+                                            <x-heroicon-s-user-plus class="w-4 h-4" />
+                                            Sign Up
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-lg">
+                                        <div class="w-10 h-10 rounded-full bg-[#000080] flex items-center justify-center">
+                                            <x-heroicon-s-user class="w-5 h-5 text-white" />
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-gray-900">{{ $user->name }}</p>
+                                            <p class="text-xs text-gray-500">{{ $user->email }}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-1">
+                                        @if($user->user_type === UserType::CUSTOMER)
+                                            <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 text-gray-600 hover:text-[#000080] py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                                <x-heroicon-s-home-modern class="w-4 h-4" />
+                                                Dashboard
+                                            </a>
+                                            <a href="{{ route('customer.profile') }}" class="flex items-center gap-3 text-gray-600 hover:text-[#000080] py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                                <x-heroicon-s-user class="w-4 h-4" />
+                                                View Profile
+                                            </a>
+                                        @else
+                                            <a href="{{ route('owner.profile') }}" class="flex items-center gap-3 text-gray-600 hover:text-[#000080] py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                                <x-heroicon-s-user class="w-4 h-4" />
+                                                View Profile
+                                            </a>
+                                        @endif
+                                        
+                                        <form action="{{ route('logout') }}" method="post">
+                                            @csrf
+                                            <button type="submit" class="w-full flex items-center gap-3 text-red-500 hover:text-red-600 py-2 px-3 rounded-lg hover:bg-red-50 transition-colors">
+                                                <x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4" />
+                                                Log Out
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endguest
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search button -->
+                <!-- <a href="{{ url('/search') }}"
                    class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
                     <x-heroicon-s-magnifying-glass class="w-4 h-4 text-gray-600" />
-                </a>
+                </a> -->
             </div>
         </div>
     </div>

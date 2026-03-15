@@ -87,7 +87,7 @@
                             <input type="checkbox" wire:model="features" value="{{ $name }}"
                                    class="checkbox checkbox-sm
                                    @if(in_array($name, old(request('features', [])))
-                                       'bg-blue-800 border-blue-800 checked:bg-[#000080] checked:text-white'
+                                       'border-indigo-600 bg-indigo-100 checked:border-orange-500 checked:bg-orange-400'
                                    @else
                                        'bg-gray-100'
                                    @endif" />

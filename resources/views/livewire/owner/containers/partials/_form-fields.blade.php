@@ -9,9 +9,9 @@
                         Title <span class="text-red-500">*</span>
                     </label>
                     <input type="text" wire:model="title" placeholder="e.g., 40ft Dry Container - Port Klang"
-                           class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
+                        class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
                     @error('title')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -21,14 +21,14 @@
                             Container Type <span class="text-red-500">*</span>
                         </label>
                         <select wire:model="container_type"
-                                class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
+                            class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
                             <option value="">Select container type</option>
                             @foreach ($types as $type)
-                                <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
                             @endforeach
                         </select>
                         @error('container_type')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
@@ -36,14 +36,14 @@
                             Container Size <span class="text-red-500">*</span>
                         </label>
                         <select wire:model="container_size"
-                                class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
+                            class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
                             <option value="">Select size</option>
                             @foreach ($sizes as $size)
-                                <option value="{{ $size->id }}">{{ $size->name }}</option>
+                            <option value="{{ $size->id }}">{{ $size->name }}</option>
                             @endforeach
                         </select>
                         @error('container_size')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -53,14 +53,14 @@
                         Container Condition <span class="text-red-500">*</span>
                     </label>
                     <select wire:model="container_condition"
-                            class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
+                        class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
                         <option value="">Select condition</option>
                         @foreach ($conditions as $condition)
-                            <option value="{{ $condition->id }}">{{ $condition->name }}</option>
+                        <option value="{{ $condition->id }}">{{ $condition->name }}</option>
                         @endforeach
                     </select>
                     @error('container_condition')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -70,39 +70,39 @@
                             Year Built <span class="text-red-500">*</span>
                         </label>
                         <select wire:model="year_built"
-                                class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
+                            class="select select-bordered w-full py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800">
                             <option value="">Select year</option>
                             @for ($y = (int) date('Y'); $y >= 1990; $y--)
-                                <option value="{{ $y }}">{{ $y }}</option>
+                            <option value="{{ $y }}">{{ $y }}</option>
                             @endfor
                         </select>
                         @error('year_built')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
                         <label class="text-[13px] text-gray-600 mb-2 block font-semibold">
                             Last Inspection Date <span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
-                            <input type="date" 
-                                   wire:model="last_inspection_date" 
-                                   class="input input-bordered w-full py-3 px-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                                   color-scheme="dark"
-                                   style="color-scheme: dark;">
+                        <div class="relative" x-data="{ selectedDate: @entangle('last_inspection_date') }">
+                            <button type="button" popovertarget="cally-popover1" class="input input-bordered w-full py-3 px-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 cursor-pointer text-left flex items-center justify-between" id="cally1" style="anchor-name:--cally1">
+                                <span x-text="selectedDate || 'Pick a date'"></span>
+                                <x-heroicon-s-calendar class="w-5 h-5 text-gray-400" />
+                            </button>
+                            <div popover id="cally-popover1" class="dropdown bg-base-100 rounded-box shadow-lg" style="position-anchor:--cally1">
+                                <calendar-date class="cally" :value="selectedDate" @change="selectedDate = $event.target.value">
+                                    <svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+                                    </svg>
+                                    <svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+                                    </svg>
+                                    <calendar-month></calendar-month>
+                                </calendar-date>
+                            </div>
                         </div>
-                        
-                        <style>
-                            input[type="date"]::-webkit-calendar-picker-indicator {
-                                filter: invert(1);
-                            }
-                            input[type="date"]::-webkit-inner-spin-button,
-                            input[type="date"]::-webkit-outer-spin-button {
-                                filter: invert(1);
-                            }
-                        </style>
                         @error('last_inspection_date')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -112,13 +112,12 @@
                         Container ID/Serial Number
                     </label>
                     <input type="text" wire:model="serial_number" placeholder="e.g., CSQU3054383"
-                           class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-4 py-3 rounded-xl border border-gray-200 text-[14px] outline-none focus:border-[#000080] transition-colors">
+                        class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-full px-4 py-3 rounded-xl border border-gray-200 text-[14px] outline-none focus:border-[#000080] transition-colors">
                     @error('serial_number')
-                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
             @include('livewire.owner.containers.partials._location-pricing')
             @include('livewire.owner.containers.partials._specs-features-images')
-
