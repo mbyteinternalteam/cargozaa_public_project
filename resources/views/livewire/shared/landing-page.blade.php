@@ -19,6 +19,7 @@
 
             {{-- Search Bar --}}
             <!-- <div class="w-full max-w-6xl mx-auto mb-16">
+            <div class="w-full max-w-6xl mx-auto mb-16">
                 <a href="{{ route('customer.search') }}"
                     class="block bg-white p-2 rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,128,0.15)] border border-gray-100 hover:shadow-xl transition-shadow">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-0 rounded-2xl overflow-hidden">
@@ -184,6 +185,7 @@
             </div>
         </div>
     </div>
+            </div>
 
             {{-- Transforming Logistics --}}
             <div class="grid lg:grid-cols-2 gap-12 items-center">

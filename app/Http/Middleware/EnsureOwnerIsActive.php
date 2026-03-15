@@ -35,7 +35,7 @@ class EnsureOwnerIsActive
                 return redirect()->route('owner.profile')
                     ->with('owner_login_blocked', [
                         'title' => 'Account Pending',
-                        'message' => 'Your account is pending activation. Please contact support to activate your account.',
+                        'message' => 'Your account doesn\'t have access to this page yet. Please contact support to activate your account.',
                         'reason' => 'Account status is pending'
                     ]);
             }

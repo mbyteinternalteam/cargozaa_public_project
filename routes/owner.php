@@ -5,8 +5,9 @@ use App\Http\Controllers\OwnerLoginController;
 use App\Http\Controllers\OwnerProfileController;
 use App\Livewire\Owner\Containers\CreatePage;
 use App\Livewire\Owner\Containers\EditPage;
-use App\Livewire\Owner\Containers\IndexPage;
+use App\Livewire\Owner\Containers\IndexPage as ContainerIndexPage;
 use App\Livewire\Owner\Containers\ShowPage;
+use App\Livewire\Owner\Orders\IndexPage as OrderIndexPage;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
@@ -31,7 +32,7 @@ Route::prefix('owner')->name('owner.')->group(function (): void {
             return view('owner.dashboard');
         })->middleware('owner.active')->name('dashboard');
 
-        Route::get('containers', IndexPage::class)
+        Route::get('containers', ContainerIndexPage::class)
             ->middleware('owner.active')->name('containers.index');
 
         Route::get('containers/create', CreatePage::class)
@@ -42,5 +43,8 @@ Route::prefix('owner')->name('owner.')->group(function (): void {
 
         Route::get('containers/{container}', ShowPage::class)
             ->middleware('owner.active')->name('containers.show');
+
+        Route::get('orders', OrderIndexPage::class)
+            ->middleware('owner.active')->name('orders.index');
     });
 });
