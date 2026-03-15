@@ -65,8 +65,7 @@
                     </div>
                 </div>
             </div> -->
-                <div class="w-full max-w-6xl mx-auto mb-16">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+        <div class="w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 mb-16">
             <div class="bg-white rounded-2xl p-2 shadow-lg border border-gray-100 transition-all duration-300">
                 <form wire:submit="search" class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr_auto] gap-0 items-center">
                     <div class="p-3 md:border-r border-gray-100">
@@ -184,8 +183,7 @@
                 </form>
             </div>
         </div>
-    </div>
-            </div>
+
 
             {{-- Transforming Logistics --}}
             <div class="grid lg:grid-cols-2 gap-12 items-center">
