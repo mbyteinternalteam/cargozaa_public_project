@@ -22,7 +22,3 @@ Route::post('/logout', function (Request $request) {
 
     return redirect()->route('owner.login');
 })->middleware('auth')->name('logout');
-
-require __DIR__.'/owner.php';
-
-require __DIR__.'/customer.php';

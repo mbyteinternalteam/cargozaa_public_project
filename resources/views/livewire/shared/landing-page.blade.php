@@ -1,18 +1,24 @@
-<div class="flex flex-col">
+<div class="flex flex-col" x-data="{ heroReady: false }" x-init="setTimeout(() => heroReady = true, 80)">
     {{-- Hero --}}
     <section class="relative pt-12 pb-24 overflow-hidden bg-white">
         <div class="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] bg-[#FFD700]/10 rounded-full blur-3xl opacity-50"></div>
         <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
             <div class="flex flex-col items-center text-center mb-12">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[#000080] text-sm font-semibold border border-blue-100 mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[#000080] text-sm font-semibold border border-blue-100 mb-6 transition-all duration-700 ease-out"
+                     :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                     style="transition-delay: 0ms">
                     <x-heroicon-s-bolt class="w-4 h-4 text-[#FFD700]" />
                     #1 Container Leasing Platform
                 </div>
-                <h1 class="text-4xl lg:text-6xl font-extrabold text-[#000080] leading-tight mb-4">
+                <h1 class="text-4xl lg:text-6xl font-extrabold text-[#000080] leading-tight mb-4 transition-all duration-700 ease-out"
+                    :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                    style="transition-delay: 100ms">
                     Lease Containers <br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#000080] to-[#FFD700]">Easily & Securely</span>
                 </h1>
-                <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                <p class="text-lg text-gray-500 max-w-2xl mx-auto transition-all duration-700 ease-out"
+                   :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                   style="transition-delay: 200ms">
                     The smart way to find, book, and track shipping containers worldwide. For logistics, storage, and specialized cargo.
                 </p>
             </div>
@@ -65,7 +71,9 @@
                     </div>
                 </div>
             </div> -->
-        <div class="w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 mb-16">
+        <div class="w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 mb-16 transition-all duration-700 ease-out"
+             :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+             style="transition-delay: 300ms">
             <div class="bg-white rounded-2xl p-2 shadow-lg border border-gray-100 transition-all duration-300">
                 <form wire:submit="search" class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr_auto] gap-0 items-center">
                     <div class="p-3 md:border-r border-gray-100">
@@ -186,13 +194,21 @@
 
 
             {{-- Transforming Logistics --}}
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="grid lg:grid-cols-2 gap-12 items-center"
+                 x-data="{ inView: false }"
+                 x-intersect.once="inView = true">
                 <div class="space-y-6">
-                    <h2 class="text-3xl font-black text-[#000080]">Transforming Container Logistics</h2>
-                    <p class="text-lg text-gray-500 leading-relaxed">
+                    <h2 class="text-3xl font-black text-[#000080] transition-all duration-600 ease-out"
+                        :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                        style="transition-delay: 0ms">Transforming Container Logistics</h2>
+                    <p class="text-lg text-gray-500 leading-relaxed transition-all duration-600 ease-out"
+                       :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                       style="transition-delay: 80ms">
                         We've built a sophisticated container leasing platform. Whether you need a single 20ft dry unit or a fleet of reefers, Cargozaa delivers in minutes, not days.
                     </p>
-                    <div class="flex items-center gap-6 pt-4">
+                    <div class="flex items-center gap-6 pt-4 transition-all duration-600 ease-out"
+                         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                         style="transition-delay: 160ms">
                         <div class="flex -space-x-3">
                             @foreach ([1, 2, 3, 4] as $i)
                                 <div class="w-12 h-12 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-sm"></div>
@@ -204,7 +220,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative">
+                <div class="relative transition-all duration-600 ease-out"
+                     :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                     style="transition-delay: 240ms">
                     <div class="rounded-3xl overflow-hidden shadow-2xl">
                         <img src="https://images.unsplash.com/photo-1605745341112-85968b19335b?auto=format&fit=crop&q=80&w=1200"
                             alt="Container port" class="w-full h-80 object-cover rounded-3xl">
@@ -240,11 +258,15 @@
     </section>
 
     {{-- Benefits --}}
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50" x-data="{ inView: false }" x-intersect.once="inView = true">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-black text-[#000080] mb-2">Why Lease with Cargozaa?</h2>
-                <p class="text-gray-500 max-w-2xl mx-auto">We simplify complex logistics with a digital-first approach to container leasing.</p>
+                <h2 class="text-3xl font-black text-[#000080] mb-2 transition-all duration-600 ease-out"
+                    :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    style="transition-delay: 0ms">Why Lease with Cargozaa?</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto transition-all duration-600 ease-out"
+                   :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                   style="transition-delay: 80ms">We simplify complex logistics with a digital-first approach to container leasing.</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ([
@@ -255,7 +277,9 @@
                     ['icon' => 'sparkles', 'title' => 'Smart Pricing', 'desc' => 'Transparent daily, weekly, and monthly rates with no hidden fees.'],
                     ['icon' => 'phone', 'title' => 'Dedicated Support', 'desc' => '24/7 customer support for booking, tracking, and claims.'],
                 ] as $benefit)
-                    <div class="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all">
+                    <div class="bg-white p-8 rounded-2xl border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-600 ease-out"
+                         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                         style="transition-delay: {{ 160 + $loop->index * 60 }}ms">
                         @php $icon = $benefit['icon']; @endphp
                         <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
                             <x-dynamic-component :component="'heroicon-s-'.$icon" class="w-8 h-8 text-[#000080]" />
@@ -269,15 +293,21 @@
     </section>
 
     {{-- Featured Containers --}}
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-white" x-data="{ inView: false }" x-intersect.once="inView = true">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
                 <div>
-                    <h2 class="text-3xl font-black text-[#000080] mb-2">Available Containers Near You</h2>
-                    <p class="text-gray-500">Ready for immediate dispatch from local ports.</p>
+                    <h2 class="text-3xl font-black text-[#000080] mb-2 transition-all duration-600 ease-out"
+                        :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                        style="transition-delay: 0ms">Available Containers Near You</h2>
+                    <p class="text-gray-500 transition-all duration-600 ease-out"
+                       :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                       style="transition-delay: 80ms">Ready for immediate dispatch from local ports.</p>
                 </div>
                 <a href="{{ route('customer.search') }}"
-                    class="flex items-center gap-2 text-[#000080] font-bold hover:text-[#FFD700] transition-colors">
+                    class="flex items-center gap-2 text-[#000080] font-bold hover:text-[#FFD700] transition-all duration-600 ease-out"
+                    :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    style="transition-delay: 160ms">
                     View all listings <x-heroicon-s-arrow-right class="w-4 h-4" />
                 </a>
             </div>
@@ -295,7 +325,9 @@
                         $dailyPrice = (float) ($container->daily_markup ?: $container->daily_rate);
                         $isGuest = auth()->guest();
                     @endphp
-                    <div class="group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all">
+                    <div class="group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-600 ease-out"
+                         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                         style="transition-delay: {{ 240 + $loop->index * 70 }}ms">
                         <a href="{{ route('customer.containers.show', $container) }}" class="block">
                             <div class="relative h-48 overflow-hidden">
                                 @if($container->images && count($container->images) > 0)
@@ -350,11 +382,15 @@
     </section>
 
     {{-- Who Uses --}}
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50" x-data="{ inView: false }" x-intersect.once="inView = true">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-black text-[#000080] mb-2">Who Uses Cargozaa?</h2>
-                <p class="text-gray-500 max-w-2xl mx-auto">From logistics to warehousing, we serve businesses of all sizes.</p>
+                <h2 class="text-3xl font-black text-[#000080] mb-2 transition-all duration-600 ease-out"
+                    :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    style="transition-delay: 0ms">Who Uses Cargozaa?</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto transition-all duration-600 ease-out"
+                   :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                   style="transition-delay: 80ms">From logistics to warehousing, we serve businesses of all sizes.</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach ([
@@ -363,7 +399,9 @@
                     ['icon' => 'sparkles', 'title' => 'SMEs', 'desc' => 'Affordable storage and transit for growing businesses.'],
                     ['icon' => 'archive-box', 'title' => 'Warehouse Owners', 'desc' => 'Extend capacity with on-demand container storage.'],
                 ] as $user)
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 text-center">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 text-center transition-all duration-600 ease-out"
+                         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                         style="transition-delay: {{ 160 + $loop->index * 80 }}ms">
                         <div class="w-12 h-12 bg-[#000080]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
                             <x-dynamic-component :component="'heroicon-s-'.$user['icon']" class="w-6 h-6 text-[#000080]" />
                         </div>
@@ -376,21 +414,27 @@
     </section>
 
     {{-- AI Search Teaser --}}
-    <section class="py-20">
+    <section class="py-20" x-data="{ inView: false }" x-intersect.once="inView = true">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="bg-[#000080] rounded-3xl p-12 lg:p-20 relative overflow-hidden">
                 <div class="absolute bottom-0 right-0 w-1/2 h-full opacity-10 pointer-events-none flex items-center justify-end pr-10">
                     <x-heroicon-o-cube class="w-64 h-64 text-white" />
                 </div>
                 <div class="relative z-10 max-w-2xl">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6 transition-all duration-600 ease-out"
+                         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                         style="transition-delay: 0ms">
                         <x-heroicon-o-cube class="w-4 h-4 text-[#FFD700]" />
                         Powered by CargoAI
                     </div>
-                    <h2 class="text-3xl lg:text-4xl font-bold text-white mb-8">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-white mb-8 transition-all duration-600 ease-out"
+                        :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                        style="transition-delay: 100ms">
                         Just tell us what you need. <br>We'll handle the rest.
                     </h2>
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 transition-all duration-600 ease-out"
+                         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                         style="transition-delay: 200ms">
                         <p class="text-blue-100 italic text-lg mb-6">
                             "I need two 40ft refrigerated containers in Johor Port for about 3 months, starting next Tuesday. I need delivery to my warehouse."
                         </p>

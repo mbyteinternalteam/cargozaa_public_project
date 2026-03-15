@@ -1,13 +1,19 @@
-<div class="bg-white min-h-screen" x-data="{ showFilters: window.matchMedia('(min-width: 1024px)').matches, favorites: [] }">
+<div class="bg-white min-h-screen" x-data="{ showFilters: window.matchMedia('(min-width: 1024px)').matches, favorites: [], heroReady: false }" x-init="setTimeout(() => heroReady = true, 80)">
     {{-- Search Bar --}}
     <div class="bg-gradient-to-b from-gray-50 to-white border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
-            <div class="mb-6 transition-opacity duration-300">
-                <h1 class="text-[#1a1a2e] text-[28px] font-bold mb-2">Find Your Container</h1>
-                <p class="text-gray-500 text-[15px]">Browse {{ $containers->total() }} containers across Malaysia</p>
+            <div class="mb-6">
+                <h1 class="text-[#1a1a2e] text-[28px] font-bold mb-2 transition-all duration-700 ease-out"
+                    :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                    style="transition-delay: 0ms">Find Your Container</h1>
+                <p class="text-gray-500 text-[15px] transition-all duration-700 ease-out"
+                   :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                   style="transition-delay: 100ms">Browse {{ $containers->total() }} containers across Malaysia</p>
             </div>
 
-            <div class="bg-white rounded-2xl p-2 shadow-lg border border-gray-100 transition-all duration-300">
+            <div class="bg-white rounded-2xl p-2 shadow-lg border border-gray-100 transition-all duration-700 ease-out"
+                 :class="heroReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                 style="transition-delay: 200ms">
                 <form wire:submit="search" class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr_auto] gap-0 items-center">
                     <div class="p-3 md:border-r border-gray-100">
                         <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Goods Type</label>
@@ -126,7 +132,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8" x-data="{ resultsInView: false }" x-intersect.once="resultsInView = true">
         <div class="flex gap-8">
             {{-- Filter Panel --}}
             <aside x-show="showFilters" x-transition:enter="transition ease-out duration-200"
@@ -136,7 +142,9 @@
                 class="flex-shrink-0 overflow-hidden"
                 :class="showFilters ? 'w-[280px]' : 'w-0'"
                 x-cloak>
-                <div class="w-[280px] sticky top-[90px] space-y-6">
+                <div class="w-[280px] sticky top-[90px] space-y-6 transition-all duration-600 ease-out"
+                     :class="resultsInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'"
+                     style="transition-delay: 0ms">
                     <div class="flex items-center justify-between">
                         <h3 class="text-[#1a1a2e] text-[16px] font-semibold">Filters</h3>
                         <button @click="showFilters = false" type="button" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
@@ -241,7 +249,9 @@
 
             {{-- Results --}}
             <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6 transition-all duration-600 ease-out"
+                     :class="resultsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                     style="transition-delay: 0ms">
                     <div class="flex items-center gap-3">
                         <button x-show="!showFilters" @click="showFilters = true" type="button"
                             class="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 hover:border-gray-300 text-[14px] text-gray-600 transition-colors">
@@ -295,7 +305,9 @@
                             $hasGps = $container->latitude && $container->longitude;
                         @endphp
                         <a href="{{ url('/containers/'.$container->id) }}{{ ($leaseStart && $leaseEnd) ? '?start='.$leaseStart.'&end='.$leaseEnd : '' }}"
-                            class="group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-300 {{ $viewMode === 'list' ? 'flex' : '' }}">
+                            class="group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-600 ease-out {{ $viewMode === 'list' ? 'flex' : '' }}"
+                            :class="resultsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                            style="transition-delay: {{ 80 + $loop->index * 50 }}ms">
                             <div class="relative overflow-hidden transition-all duration-300 {{ $viewMode === 'list' ? 'w-72 flex-shrink-0 h-48' : 'h-48' }}">
                                 @if($container->images && count($container->images) > 0)
                                
@@ -363,7 +375,9 @@
                             </div>
                         </a>
                     @empty
-                        <div class="col-span-full text-center py-16 border border-dashed border-gray-200 rounded-2xl">
+                        <div class="col-span-full text-center py-16 border border-dashed border-gray-200 rounded-2xl transition-all duration-600 ease-out"
+                             :class="resultsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                             style="transition-delay: 80ms">
                             <x-heroicon-s-archive-box class="w-16 h-16 text-gray-300 mx-auto mb-4" />
                             <p class="text-gray-500 text-[15px]">No containers match your search. Try adjusting your filters.</p>
                         </div>
@@ -371,7 +385,9 @@
                 </div>
 
                 @if($containers->hasPages())
-                    <div class="mt-6">{{ $containers->links() }}</div>
+                    <div class="mt-6 transition-all duration-600 ease-out"
+                         :class="resultsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                         style="transition-delay: 200ms">{{ $containers->links() }}</div>
                 @endif
             </div>
         </div>

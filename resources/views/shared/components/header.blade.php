@@ -76,8 +76,8 @@
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content mt-3 z-[60] p-2 shadow-xl bg-white rounded-xl border border-gray-100 w-56">
                         @guest
-                            <li><a href="{{ route('owner.login') }}"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4" /> Log In</a></li>
-                            <li><a href="{{ route('owner.signup') }}" class="font-semibold text-[#000080]"><x-heroicon-s-user-plus class="w-4 h-4" /> Sign Up</a></li>
+                            <li><a href="{{ route('login') }}"><x-heroicon-s-arrow-right-on-rectangle class="w-4 h-4" /> Log In</a></li>
+                            <li><a href="{{ route('signup') }}" class="font-semibold text-[#000080]"><x-heroicon-s-user-plus class="w-4 h-4" /> Sign Up</a></li>
                         @else
                             @if($user->user_type === UserType::CUSTOMER)
                                 <li><a href="{{ route('customer.dashboard') }}"><x-heroicon-s-home-modern class="w-4 h-4" /> Dashboard</a></li>

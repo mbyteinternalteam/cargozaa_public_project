@@ -9,7 +9,6 @@ Route::name('customer.')->group(function (): void {
 });
 
 Route::middleware(['auth', 'customer'])->name('customer.')->group(function (): void {
-    Route::get('dashboard', fn (): View => view('customer.dashboard'))->name('dashboard');
     Route::get('profile', \App\Livewire\Customer\ProfilePage::class)->name('profile');
     Route::get('customer/leases', fn (): View => view('customer.leases'))->name('leases');
 

@@ -1,14 +1,22 @@
-<div class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-blue-50 to-white">
+<div class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-blue-50 to-white" x-data="{ ready: false }" x-init="setTimeout(() => ready = true, 80)">
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-lg mb-4 bg-primary">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-lg mb-4 bg-primary transition-all duration-700 ease-out"
+                 :class="ready ? 'opacity-100 scale-100' : 'opacity-0 scale-90'"
+                 style="transition-delay: 0ms">
                 <x-heroicon-s-cube class="w-8 h-8 text-white" />
             </div>
-            <h1 class="text-3xl font-bold mb-2 text-primary">Welcome Back</h1>
-            <p class="text-gray-600">Sign in to your customer account.</p>
+            <h1 class="text-3xl font-bold mb-2 text-primary transition-all duration-700 ease-out"
+                :class="ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+                style="transition-delay: 100ms">Welcome Back</h1>
+            <p class="text-gray-600 transition-all duration-700 ease-out"
+               :class="ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+               style="transition-delay: 180ms">Sign in to your customer account.</p>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class="bg-white rounded-2xl shadow-xl p-8 transition-all duration-700 ease-out"
+             :class="ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+             style="transition-delay: 260ms">
             <form wire:submit="login" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
@@ -23,7 +31,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <div class="relative">
-                        <input wire:model.defer="password" :type="$showPassword ? 'text' : 'password'"
+                        <input wire:model.defer="password" type="{{ $showPassword ? 'text' : 'password' }}"
                             class="input text-sm input-bordered w-full pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('password') border-red-500 @enderror"
                             placeholder="Enter your password" />
                         <button type="button" wire:click="$toggle('showPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -59,7 +67,9 @@
             </form>
         </div>
 
-        <div class="mt-6 text-center space-y-2">
+        <div class="mt-6 text-center space-y-2 transition-all duration-700 ease-out"
+             :class="ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+             style="transition-delay: 340ms">
             <p class="text-gray-600">Don't have an account? <a href="{{ route('signup') }}" class="font-semibold text-amber-500 hover:text-amber-600 hover:underline">Sign up for free</a></p>
         </div>
     </div>

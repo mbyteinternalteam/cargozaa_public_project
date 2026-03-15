@@ -57,7 +57,7 @@ class SignupForm extends Component
 
         session()->flash('customer_signup_success', true);
 
-        $this->redirectRoute('customer.login');
+        $this->redirectRoute('customer.auth.login');
     }
 
     public function render()

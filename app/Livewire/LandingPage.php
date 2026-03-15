@@ -46,8 +46,11 @@ class LandingPage extends Component
             'location' => $this->location,
             'leaseStart' => $this->leaseStart,
             'leaseEnd' => $this->leaseEnd,
-        return view('livewire.shared.landing-page', [
-            'featuredContainers' => $featuredContainers,
         ]);
+
+
+        // return view('livewire.shared.landing-page', [
+        //     'featuredContainers' => $featuredContainers,
+        // ]);
     }
 }

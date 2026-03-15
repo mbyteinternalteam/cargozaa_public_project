@@ -51,7 +51,7 @@ class LoginForm extends Component
             return;
         }
 
-        $this->redirectRoute('customer.dashboard');
+        $this->redirectRoute('home');
     }
 
     public function render()
