@@ -13,14 +13,14 @@
                         <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Goods Type</label>
                         <details class="dropdown w-full" x-data x-on:click.outside="$el.removeAttribute('open')">
                             <summary class="flex items-center gap-2 cursor-pointer list-none text-[14px] text-gray-900 font-medium w-full [&::-webkit-details-marker]:hidden">
-                                <x-heroicon-s-archive-box class="w-4 h-4 text-[#000080] flex-shrink-0" />
+                                <x-heroicon-s-archive-box class="w-4 h-4 text-[#FFD700] flex-shrink-0" />
                                 <span class="truncate">{{ $goodsType ?: 'Select type...' }}</span>
                                 <x-heroicon-s-chevron-down class="w-3 h-3 ml-auto text-gray-400 flex-shrink-0" />
                             </summary>
                             <ul class="dropdown-content menu bg-base-100 rounded-box z-50 w-full min-w-48 p-2 shadow-lg border border-gray-100 mt-2">
-                                <li><a @click="$wire.set('goodsType', ''); $el.closest('details').removeAttribute('open')" class="{{ !$goodsType ? 'bg-[#000080]/5 text-[#000080] font-semibold' : '' }}">Select type...</a></li>
+                                <li><a @click="$wire.set('goodsType', ''); $el.closest('details').removeAttribute('open')" class="{{ !$goodsType ? 'bg-yellow-600/10 text-yellow-800 font-semibold' : '' }}">Select type...</a></li>
                                 @foreach($types as $t)
-                                    <li><a @click="$wire.set('goodsType', '{{ $t->name }}'); $el.closest('details').removeAttribute('open')" class="{{ $goodsType === $t->name ? 'bg-[#000080]/5 text-[#000080] font-semibold' : '' }}">{{ $t->name }}</a></li>
+                                    <li><a @click="$wire.set('goodsType', '{{ $t->name }}'); $el.closest('details').removeAttribute('open')" class="{{ $goodsType === $t->name ? 'bg-yellow-600/10 text-yellow-800 font-semibold' : '' }}">{{ $t->name }}</a></li>
                                 @endforeach
                             </ul>
                         </details>
@@ -58,11 +58,11 @@
                         @click.outside="showSuggestions = false">
                         <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Location</label>
                         <div class="flex items-center gap-2">
-                            <x-heroicon-s-map-pin class="w-4 h-4 text-[#000080] flex-shrink-0" />
+                            <x-heroicon-s-map-pin class="w-4 h-4 text-[#FFD700] flex-shrink-0" />
                             <input type="text" x-model="query" @input="fetchSuggestions()" @focus="if(suggestions.length) showSuggestions = true"
                                 placeholder="City or port..."
                                 class="bg-transparent text-[14px] text-gray-900 w-full outline-none placeholder:text-gray-400 font-medium" />
-                            <svg x-show="loading" class="w-4 h-4 animate-spin text-gray-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            <svg x-show="loading" class="w-4 h-4 animate-spin text-[#FFD700] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
                         </div>
                         <ul x-show="showSuggestions" x-transition class="absolute left-0 right-0 top-full mt-1 bg-base-100 rounded-box z-50 p-2 shadow-lg border border-gray-100 max-h-48 overflow-y-auto">
                             <template x-for="(item, idx) in suggestions" :key="idx">
@@ -100,7 +100,7 @@
                         @click.outside="open = false">
                         <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Lease Period</label>
                         <button type="button" @click="open = !open" class="flex items-center gap-2 text-[14px] text-gray-900 font-medium w-full">
-                            <x-heroicon-s-calendar class="w-4 h-4 text-[#000080] flex-shrink-0" />
+                            <x-heroicon-s-calendar class="w-4 h-4 text-[#FFD700] flex-shrink-0" />
                             <span class="truncate" x-text="label"></span>
                             <x-heroicon-s-chevron-down class="w-3 h-3 ml-auto text-gray-400 flex-shrink-0" />
                         </button>

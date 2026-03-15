@@ -18,6 +18,7 @@
             </div>
 
             {{-- Search Bar --}}
+            <!-- <div class="w-full max-w-6xl mx-auto mb-16">
             <div class="w-full max-w-6xl mx-auto mb-16">
                 <a href="{{ route('customer.search') }}"
                     class="block bg-white p-2 rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,128,0.15)] border border-gray-100 hover:shadow-xl transition-shadow">
@@ -63,7 +64,126 @@
                         <span class="text-xs font-bold uppercase tracking-wider">Verified Global Fleet</span>
                     </div>
                 </div>
+            </div> -->
+        <div class="w-full max-w-6xl mx-auto px-6 lg:px-8 py-8 mb-16">
+            <div class="bg-white rounded-2xl p-2 shadow-lg border border-gray-100 transition-all duration-300">
+                <form wire:submit="search" class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr_auto] gap-0 items-center">
+                    <div class="p-3 md:border-r border-gray-100">
+                        <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Goods Type</label>
+                        <details class="dropdown w-full" x-data x-on:click.outside="$el.removeAttribute('open')">
+                            <summary class="flex items-center gap-2 cursor-pointer list-none text-[14px] text-gray-900 font-medium w-full [&::-webkit-details-marker]:hidden">
+                                <x-heroicon-s-archive-box class="w-4 h-4 text-[#FFD700] flex-shrink-0" />
+                                <span class="truncate">{{ $goodsType ?: 'Select type...' }}</span>
+                                <x-heroicon-s-chevron-down class="w-3 h-3 ml-auto text-gray-400 flex-shrink-0" />
+                            </summary>
+                            <ul class="dropdown-content menu bg-base-100 rounded-box z-50 w-full min-w-48 p-2 shadow-lg border border-gray-100 mt-2">
+                                <li><a @click="$wire.set('goodsType', ''); $el.closest('details').removeAttribute('open')" class="{{ !$goodsType ? 'bg-yellow-600/10 text-yellow-800 font-semibold' : '' }}">Select type...</a></li>
+                                @foreach($types as $t)
+                                    <li><a @click="$wire.set('goodsType', '{{ $t->name }}'); $el.closest('details').removeAttribute('open')" class="{{ $goodsType === $t->name ? 'bg-yellow-600/10 text-yellow-800 font-semibold' : '' }}">{{ $t->name }}</a></li>
+                                @endforeach
+                            </ul>
+                        </details>
+                    </div>
+                    <div class="p-3 md:border-r border-gray-100 relative"
+                        x-data="{
+                            query: @entangle('location'),
+                            suggestions: [],
+                            showSuggestions: false,
+                            loading: false,
+                            timeout: null,
+                            fetchSuggestions() {
+                                clearTimeout(this.timeout);
+                                if (this.query.length < 2) { this.suggestions = []; this.showSuggestions = false; return; }
+                                this.timeout = setTimeout(async () => {
+                                    this.loading = true;
+                                    try {
+                                        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=my&limit=5&q=${encodeURIComponent(this.query)}`, { headers: { 'Accept': 'application/json' } });
+                                        const data = await res.json();
+                                        this.suggestions = data.map(d => {
+                                            const parts = d.display_name.split(',').map(s => s.trim());
+                                            return { short: parts.slice(0, 3).join(', '), full: d.display_name };
+                                        });
+                                        this.showSuggestions = this.suggestions.length > 0;
+                                    } catch { this.suggestions = []; }
+                                    this.loading = false;
+                                }, 300);
+                            },
+                            select(item) {
+                                this.query = item.short;
+                                $wire.set('location', item.short);
+                                this.showSuggestions = false;
+                            }
+                        }"
+                        @click.outside="showSuggestions = false">
+                        <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Location</label>
+                        <div class="flex items-center gap-2">
+                            <x-heroicon-s-map-pin class="w-4 h-4 text-[#FFD700] flex-shrink-0" />
+                            <input type="text" x-model="query" @input="fetchSuggestions()" @focus="if(suggestions.length) showSuggestions = true"
+                                placeholder="City or port..."
+                                class="bg-transparent text-[14px] text-gray-900 w-full outline-none placeholder:text-gray-400 font-medium" />
+                            <svg x-show="loading" class="w-4 h-4 animate-spin text-[#FFD700] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        </div>
+                        <ul x-show="showSuggestions" x-transition class="absolute left-0 right-0 top-full mt-1 bg-base-100 rounded-box z-50 p-2 shadow-lg border border-gray-100 max-h-48 overflow-y-auto">
+                            <template x-for="(item, idx) in suggestions" :key="idx">
+                                <li @click="select(item)" class="px-3 py-2 rounded-lg text-[14px] text-gray-700 hover:bg-[#000080]/5 hover:text-[#000080] cursor-pointer transition-colors flex items-center gap-2">
+                                    <x-heroicon-s-map-pin class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                                    <span x-text="item.short" class="truncate"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                    <div class="p-3 md:border-r border-gray-100 relative"
+                        x-data="{
+                            start: @entangle('leaseStart'),
+                            end: @entangle('leaseEnd'),
+                            open: false,
+                            get label() {
+                                if (this.start && this.end) return this.formatDate(this.start) + ' → ' + this.formatDate(this.end);
+                                if (this.start) return this.formatDate(this.start) + ' → ...';
+                                return 'Select dates...';
+                            },
+                            formatDate(d) {
+                                const dt = new Date(d + 'T00:00:00');
+                                return dt.toLocaleDateString('en-MY', { day: 'numeric', month: 'short' });
+                            },
+                            onRangeChange(e) {
+                                const val = e.target.value || '';
+                                const [s, en] = val.split('/');
+                                this.start = s || '';
+                                this.end = en || '';
+                                $wire.set('leaseStart', this.start);
+                                $wire.set('leaseEnd', this.end);
+                                if (this.start && this.end) this.open = false;
+                            }
+                        }"
+                        @click.outside="open = false">
+                        <label class="text-[11px] text-gray-500 mb-1 block font-semibold uppercase tracking-wider">Lease Period</label>
+                        <button type="button" @click="open = !open" class="flex items-center gap-2 text-[14px] text-gray-900 font-medium w-full">
+                            <x-heroicon-s-calendar class="w-4 h-4 text-[#FFD700] flex-shrink-0" />
+                            <span class="truncate" x-text="label"></span>
+                            <x-heroicon-s-chevron-down class="w-3 h-3 ml-auto text-gray-400 flex-shrink-0" />
+                        </button>
+                        <div x-show="open" x-transition class="absolute left-0 top-full mt-1 z-50">
+                            <calendar-range
+                                class="cally bg-base-100 border border-gray-200 shadow-lg rounded-box"
+                                :value="(start && end) ? start + '/' + end : ''"
+                                min="{{ now()->format('Y-m-d') }}"
+                                @change="onRangeChange($event)">
+                                <svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
+                                <svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+                                <calendar-month></calendar-month>
+                            </calendar-range>
+                        </div>
+                    </div>
+                    <div class="p-2 flex items-center">
+                        <button type="submit" class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#000080] text-white hover:bg-[#000060] transition-colors text-[14px] font-semibold">
+                            <x-heroicon-s-magnifying-glass class="w-4 h-4" /> Search
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
+
 
             {{-- Transforming Logistics --}}
             <div class="grid lg:grid-cols-2 gap-12 items-center">
