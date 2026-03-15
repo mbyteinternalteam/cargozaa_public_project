@@ -29,10 +29,17 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
-                            <input wire:model.defer="phone" type="tel"
+                            <input wire:model.live="phone" type="text"
                                    class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
-                                   placeholder="+60 12-345 6789">
-                            @error('phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                                   placeholder="601161234567"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                   maxlength="12">
+                            @error('phone')
+                                <p class="mt-1 text-red-600 text-sm">
+                                    <span wire:loading wire:target="phone" class="loading loading-xs loading-dots"></span>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -64,10 +71,17 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Owner IC Number</label>
-                            <input wire:model.defer="ownerIcNumber" type="number"
-                                   class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
-                                   placeholder="870101141234">
-                            @error('ownerIcNumber')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                            <input wire:model.live="ownerIcNumber" type="text"
+                                   class="input input-bordered w-full py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
+                                   placeholder="870101141234"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                   maxlength="12">
+                            @error('ownerIcNumber')
+                                <p class="mt-1 text-red-600 text-sm">
+                                    <span wire:loading wire:target="ownerIcNumber" class="loading loading-xs loading-dots"></span>
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         
