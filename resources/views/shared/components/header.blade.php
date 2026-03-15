@@ -49,8 +49,10 @@
                     @php
                         $href = $link['href'];
                         $url = str_starts_with($href, 'http') ? $href : url($href);
-                        $active = request()->fullUrlIs($url) || request()->is(ltrim(parse_url($href, PHP_URL_PATH) ?? '', '/').'*');
-                    @endphp
+                        $path = parse_url($href, PHP_URL_PATH) ?? '/';
+                        $active = $path === '/'
+                            ? request()->is('/')
+                            : request()->fullUrlIs($url) || request()->is(ltrim($path, '/').'*');                    @endphp
                     <a href="{{ $url }}"
                        class="text-[14px] transition-colors relative py-1 {{ $active ? 'text-[#000080] font-semibold' : 'text-gray-600 hover:text-[#000080]' }}">
                         {{ $link['label'] }}
