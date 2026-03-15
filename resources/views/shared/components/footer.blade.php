@@ -9,7 +9,9 @@
                     <span class="text-[22px] tracking-tight text-white font-bold">
                         Cargo<span class="text-[#FFD700]">zaa</span>
                     </span> --}}
-                    <img src="{{ asset('img/logo.png') }}" alt="Cargozaa Logo" class="h-10">
+                    <div class="w-auto p-[10px] rounded-lg bg-white flex items-center justify-center">
+                        <img src="{{ asset('img/logo.png') }}" alt="Cargozaa Logo" class="h-8">
+                    </div>
                 </div>
                 <p class="text-white/70 text-[14px] mb-6 leading-relaxed">
                     The trusted marketplace for container leasing. Connect with verified owners, lease with confidence.
